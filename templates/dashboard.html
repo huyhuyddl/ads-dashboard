@@ -5,111 +5,233 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>AdsAnalytics Pro — Dashboard</title>
     <link
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
     <style>
-      * {
+      *,
+      *::before,
+      *::after {
         box-sizing: border-box;
         margin: 0;
         padding: 0;
       }
+
       :root {
-        --bg: #080f1e;
-        --bg2: #0d1829;
-        --bg3: #111f38;
-        --accent: #1e88e5;
-        --ok: #00c9a7;
-        --warn: #ffb800;
-        --danger: #ff4757;
-        --orange: #ff6b35;
-        --text: #e8edf5;
-        --text2: #8b9bb4;
-        --text3: #4a5a72;
-        --border: rgba(255, 255, 255, 0.07);
-        --card: rgba(255, 255, 255, 0.04);
+        --bg: #060d1a;
+        --bg2: #0a1628;
+        --bg3: #0f1e36;
+        --bg4: #142240;
+        --accent: #2196f3;
+        --accent2: #42a5f5;
+        --ok: #00e5a0;
+        --warn: #ffc107;
+        --danger: #ff3d57;
+        --orange: #ff6d3b;
+        --purple: #9c6cff;
+        --text: #dde6f5;
+        --text2: #7a8fab;
+        --text3: #3d5068;
+        --border: rgba(255, 255, 255, 0.06);
+        --card: rgba(255, 255, 255, 0.03);
+        --fb: #1877f2;
+        --gg: #ea4335;
+        --tt: #69c9d0;
+        --sb-w: 230px;
+        --glow: rgba(33, 150, 243, 0.12);
+      }
+
+      html {
+        scroll-behavior: smooth;
       }
       body {
         background: var(--bg);
         color: var(--text);
         font-family: "DM Sans", sans-serif;
         min-height: 100vh;
+        overflow-x: hidden;
       }
 
-      /* SIDEBAR */
+      /* ── SIDEBAR ──────────────────────────────────────────── */
       .sidebar {
         position: fixed;
         left: 0;
         top: 0;
         bottom: 0;
-        width: 220px;
+        width: var(--sb-w);
         background: var(--bg2);
         border-right: 1px solid var(--border);
         display: flex;
         flex-direction: column;
-        padding: 24px 16px;
-        z-index: 100;
+        padding: 20px 14px;
+        z-index: 200;
       }
+
       .logo {
-        font-size: 17px;
-        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
         padding: 0 8px;
-        margin-bottom: 32px;
+        margin-bottom: 28px;
+      }
+      .logo-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, var(--accent), var(--purple));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 700;
+        color: #fff;
+        flex-shrink: 0;
+      }
+      .logo-text {
+        font-size: 16px;
+        font-weight: 600;
         letter-spacing: -0.3px;
       }
-      .logo span {
+      .logo-text em {
         color: var(--accent);
+        font-style: normal;
       }
+
+      /* PLATFORM SECTION */
+      .sb-section-label {
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 1.2px;
+        color: var(--text3);
+        text-transform: uppercase;
+        padding: 0 10px;
+        margin: 16px 0 6px;
+      }
+
       .nav-item {
         display: flex;
         align-items: center;
         gap: 10px;
-        padding: 10px 12px;
+        padding: 9px 10px;
         border-radius: 9px;
         cursor: pointer;
-        transition: all 0.2s;
-        font-size: 14px;
+        transition: all 0.18s;
+        font-size: 13.5px;
         color: var(--text2);
-        margin-bottom: 2px;
+        margin-bottom: 1px;
         text-decoration: none;
+        border: none;
+        background: none;
+        width: 100%;
+        font-family: "DM Sans", sans-serif;
+        position: relative;
       }
       .nav-item:hover {
         background: var(--card);
         color: var(--text);
       }
       .nav-item.active {
-        background: rgba(30, 136, 229, 0.15);
+        background: rgba(33, 150, 243, 0.12);
         color: var(--accent);
       }
-      .nav-icon {
-        width: 18px;
-        height: 18px;
+      .nav-item.active::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 20%;
+        bottom: 20%;
+        width: 3px;
+        border-radius: 0 2px 2px 0;
+        background: var(--accent);
+      }
+
+      /* Platform icon pills */
+      .p-icon {
+        width: 22px;
+        height: 22px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 700;
+        color: #fff;
         flex-shrink: 0;
       }
-      .sidebar-bottom {
-        margin-top: auto;
+      .p-fb {
+        background: var(--fb);
       }
+      .p-gg {
+        background: var(--gg);
+      }
+      .p-tt {
+        background: var(--tt);
+        color: #111;
+      }
+      .p-all {
+        background: linear-gradient(135deg, var(--accent), var(--purple));
+      }
+
+      /* Connection dot on platform nav */
+      .conn-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        margin-left: auto;
+        flex-shrink: 0;
+      }
+      .conn-dot.on {
+        background: var(--ok);
+        box-shadow: 0 0 6px var(--ok);
+      }
+      .conn-dot.off {
+        background: var(--text3);
+      }
+      .conn-dot.warn {
+        background: var(--warn);
+      }
+
+      .nav-icon {
+        width: 17px;
+        height: 17px;
+        flex-shrink: 0;
+        opacity: 0.7;
+      }
+      .nav-item.active .nav-icon {
+        opacity: 1;
+      }
+
+      .sidebar-spacer {
+        flex: 1;
+      }
+
+      /* User card */
       .user-card {
         background: var(--card);
         border: 1px solid var(--border);
         border-radius: 10px;
-        padding: 12px;
+        padding: 11px 12px;
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 9px;
+        margin-bottom: 6px;
       }
       .avatar {
-        width: 34px;
-        height: 34px;
+        width: 32px;
+        height: 32px;
         border-radius: 8px;
-        background: rgba(30, 136, 229, 0.2);
+        background: linear-gradient(
+          135deg,
+          rgba(33, 150, 243, 0.3),
+          rgba(156, 108, 255, 0.3)
+        );
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 13px;
         font-weight: 600;
-        color: var(--accent);
+        color: var(--accent2);
         flex-shrink: 0;
       }
       .user-name {
@@ -126,10 +248,9 @@
         color: var(--text3);
         cursor: pointer;
         font-size: 12px;
-        margin-top: 8px;
         width: 100%;
         text-align: center;
-        padding: 4px;
+        padding: 5px;
         border-radius: 6px;
         font-family: "DM Sans", sans-serif;
         transition: color 0.2s;
@@ -138,37 +259,73 @@
         color: var(--danger);
       }
 
-      /* MAIN */
+      /* ── MAIN ──────────────────────────────────────────────── */
       .main {
-        margin-left: 220px;
-        padding: 24px 28px;
+        margin-left: var(--sb-w);
+        padding: 24px 26px;
         min-height: 100vh;
       }
+
+      /* ── TOPBAR ────────────────────────────────────────────── */
       .topbar {
         display: flex;
         justify-content: space-between;
-        align-items: center;
-        margin-bottom: 24px;
+        align-items: flex-start;
+        margin-bottom: 22px;
       }
       .page-title {
-        font-size: 20px;
+        font-size: 19px;
         font-weight: 600;
         letter-spacing: -0.3px;
       }
+      .page-sub {
+        font-size: 12px;
+        color: var(--text3);
+        margin-top: 3px;
+      }
+
+      .topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .date-btns {
+        display: flex;
+        gap: 3px;
+      }
+      .date-btn {
+        background: var(--card);
+        border: 1px solid var(--border);
+        color: var(--text2);
+        padding: 5px 13px;
+        border-radius: 7px;
+        cursor: pointer;
+        font-size: 12px;
+        font-family: "DM Sans", sans-serif;
+        transition: all 0.18s;
+      }
+      .date-btn.active,
+      .date-btn:hover {
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent);
+      }
+
       .live-badge {
         display: flex;
         align-items: center;
-        gap: 6px;
-        font-size: 12px;
+        gap: 5px;
+        font-size: 11px;
         color: var(--ok);
-        background: rgba(0, 201, 167, 0.1);
-        border: 1px solid rgba(0, 201, 167, 0.2);
-        padding: 5px 12px;
+        background: rgba(0, 229, 160, 0.08);
+        border: 1px solid rgba(0, 229, 160, 0.2);
+        padding: 5px 11px;
         border-radius: 20px;
       }
       .dot {
-        width: 7px;
-        height: 7px;
+        width: 6px;
+        height: 6px;
         border-radius: 50%;
         background: var(--ok);
         animation: pulse 1.5s infinite;
@@ -179,182 +336,255 @@
           opacity: 1;
         }
         50% {
-          opacity: 0.3;
+          opacity: 0.2;
         }
       }
-      .date-btns {
-        display: flex;
-        gap: 4px;
-      }
-      .date-btn {
-        background: var(--card);
-        border: 1px solid var(--border);
-        color: var(--text2);
-        padding: 6px 14px;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 12px;
-        font-family: "DM Sans", sans-serif;
-        transition: all 0.2s;
-      }
-      .date-btn.active,
-      .date-btn:hover {
-        background: var(--accent);
-        color: #fff;
-        border-color: var(--accent);
-      }
 
-      /* ALERT */
-      .alert {
-        background: rgba(255, 71, 87, 0.08);
-        border: 1px solid rgba(255, 71, 87, 0.25);
-        border-radius: 10px;
-        padding: 12px 16px;
-        margin-bottom: 20px;
+      /* ── VIEWS ─────────────────────────────────────────────── */
+      .view {
         display: none;
-        align-items: center;
-        gap: 12px;
-        animation: alertPulse 2.5s infinite;
       }
-      @keyframes alertPulse {
-        0%,
-        100% {
-          border-color: rgba(255, 71, 87, 0.25);
-        }
-        50% {
-          border-color: rgba(255, 71, 87, 0.5);
-        }
-      }
-      .alert-text {
-        font-size: 13px;
-        color: #ff8a95;
+      .view.active {
+        display: block;
       }
 
-      /* DEMO BANNER */
+      /* ── DEMO BANNER ───────────────────────────────────────── */
       .demo-banner {
-        background: rgba(255, 184, 0, 0.07);
-        border: 1px solid rgba(255, 184, 0, 0.25);
-        border-radius: 10px;
-        padding: 10px 16px;
-        margin-bottom: 20px;
         display: none;
         align-items: center;
         gap: 10px;
+        background: rgba(255, 193, 7, 0.06);
+        border: 1px solid rgba(255, 193, 7, 0.2);
+        border-radius: 10px;
+        padding: 9px 14px;
+        margin-bottom: 18px;
         font-size: 13px;
       }
-      .demo-banner-icon {
-        font-size: 16px;
+      .demo-banner.show {
+        display: flex;
       }
       .demo-banner-text {
         color: #ffd54f;
       }
+      .demo-btn-connect {
+        margin-left: auto;
+        background: rgba(255, 193, 7, 0.12);
+        border: 1px solid rgba(255, 193, 7, 0.25);
+        color: var(--warn);
+        padding: 4px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 12px;
+        font-family: "DM Sans", sans-serif;
+        white-space: nowrap;
+      }
 
-      /* METRICS */
+      /* ── ALERT BAR ─────────────────────────────────────────── */
+      .alert-bar {
+        display: none;
+        align-items: center;
+        gap: 10px;
+        background: rgba(255, 61, 87, 0.07);
+        border: 1px solid rgba(255, 61, 87, 0.2);
+        border-radius: 10px;
+        padding: 10px 14px;
+        margin-bottom: 18px;
+        animation: alertPulse 3s infinite;
+      }
+      .alert-bar.show {
+        display: flex;
+      }
+      @keyframes alertPulse {
+        0%,
+        100% {
+          border-color: rgba(255, 61, 87, 0.2);
+        }
+        50% {
+          border-color: rgba(255, 61, 87, 0.45);
+        }
+      }
+      .alert-text {
+        font-size: 13px;
+        color: #ff8fa0;
+        flex: 1;
+      }
+
+      /* ── METRICS GRID ──────────────────────────────────────── */
       .metrics-grid {
         display: grid;
         grid-template-columns: repeat(5, 1fr);
-        gap: 12px;
-        margin-bottom: 20px;
+        gap: 10px;
+        margin-bottom: 18px;
       }
       .metric {
         background: var(--card);
         border: 1px solid var(--border);
         border-radius: 12px;
-        padding: 16px;
+        padding: 15px;
         position: relative;
         overflow: hidden;
+        transition: border-color 0.2s;
       }
-      .metric::before {
+      .metric:hover {
+        border-color: rgba(255, 255, 255, 0.12);
+      }
+      .metric::after {
         content: "";
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
-        height: 3px;
+        height: 2px;
         border-radius: 12px 12px 0 0;
       }
-      .m-blue::before {
+      .m-blue::after {
         background: var(--accent);
       }
-      .m-green::before {
+      .m-green::after {
         background: var(--ok);
       }
-      .m-orange::before {
+      .m-orange::after {
         background: var(--orange);
       }
-      .m-yellow::before {
+      .m-yellow::after {
         background: var(--warn);
       }
-      .m-red::before {
+      .m-red::after {
         background: var(--danger);
       }
+      .m-purple::after {
+        background: var(--purple);
+      }
+
       .m-label {
-        font-size: 11px;
+        font-size: 10.5px;
         color: var(--text2);
         text-transform: uppercase;
-        letter-spacing: 0.8px;
+        letter-spacing: 0.9px;
         margin-bottom: 8px;
       }
       .m-value {
-        font-size: 22px;
+        font-size: 21px;
         font-weight: 600;
         font-family: "JetBrains Mono", monospace;
         letter-spacing: -0.5px;
       }
       .m-sub {
-        font-size: 12px;
+        font-size: 11px;
         margin-top: 5px;
         color: var(--text3);
       }
-      .up {
+      .m-sub.up {
         color: var(--ok);
       }
 
-      /* GRID */
+      /* ── CHART GRID ────────────────────────────────────────── */
       .grid-2 {
         display: grid;
-        grid-template-columns: 1fr 320px;
-        gap: 16px;
-        margin-bottom: 16px;
+        grid-template-columns: 1fr 300px;
+        gap: 14px;
+        margin-bottom: 14px;
       }
       .grid-2b {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 16px;
+        gap: 14px;
       }
       .chart-card {
         background: var(--card);
         border: 1px solid var(--border);
         border-radius: 12px;
-        padding: 18px;
+        padding: 16px;
       }
       .card-title {
-        font-size: 13px;
+        font-size: 12.5px;
         font-weight: 500;
         color: var(--text2);
         margin-bottom: 14px;
         display: flex;
         justify-content: space-between;
+        align-items: center;
+      }
+      .card-title span {
+        font-size: 11px;
+        color: var(--text3);
       }
 
-      /* TABLE */
+      /* ── PLATFORM BADGE in single-platform view ────────────── */
+      .platform-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 18px;
+        padding: 12px 16px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+      }
+      .platform-header .p-icon-lg {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        font-weight: 700;
+        color: #fff;
+        flex-shrink: 0;
+      }
+      .ph-name {
+        font-size: 16px;
+        font-weight: 600;
+      }
+      .ph-meta {
+        font-size: 12px;
+        color: var(--text2);
+        margin-top: 2px;
+      }
+      .ph-status {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+      }
+      .ph-status .dot-lg {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+      }
+      .ph-status.connected .dot-lg {
+        background: var(--ok);
+      }
+      .ph-status.mock .dot-lg {
+        background: var(--warn);
+      }
+      .ph-status.connected {
+        color: var(--ok);
+      }
+      .ph-status.mock {
+        color: var(--warn);
+      }
+
+      /* ── CHANNEL TABLE ─────────────────────────────────────── */
       .ch-table {
         width: 100%;
         border-collapse: collapse;
       }
       .ch-table th {
-        font-size: 11px;
+        font-size: 10.5px;
         color: var(--text3);
-        padding: 6px 8px;
+        padding: 5px 8px;
         border-bottom: 1px solid var(--border);
         text-align: left;
         text-transform: uppercase;
         letter-spacing: 0.5px;
       }
       .ch-table td {
-        padding: 10px 8px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-        font-size: 13px;
+        padding: 9px 8px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.025);
+        font-size: 12.5px;
       }
       .ch-table tr:last-child td {
         border-bottom: none;
@@ -365,37 +595,42 @@
         gap: 8px;
       }
       .ch-icon {
-        width: 24px;
-        height: 24px;
-        border-radius: 6px;
+        width: 22px;
+        height: 22px;
+        border-radius: 5px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 11px;
+        font-size: 10px;
         font-weight: 700;
         color: #fff;
       }
       .badge {
-        padding: 2px 8px;
+        padding: 2px 7px;
         border-radius: 4px;
-        font-size: 11px;
+        font-size: 10.5px;
         font-weight: 500;
       }
       .b-ok {
-        background: rgba(0, 201, 167, 0.15);
+        background: rgba(0, 229, 160, 0.12);
         color: var(--ok);
       }
       .b-warn {
-        background: rgba(255, 184, 0, 0.15);
+        background: rgba(255, 193, 7, 0.12);
         color: var(--warn);
       }
       .b-danger {
-        background: rgba(255, 71, 87, 0.15);
+        background: rgba(255, 61, 87, 0.12);
         color: var(--danger);
       }
+      .b-gray {
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--text3);
+      }
+
       .prog {
-        height: 4px;
-        background: rgba(255, 255, 255, 0.07);
+        height: 3px;
+        background: rgba(255, 255, 255, 0.06);
         border-radius: 2px;
         margin-top: 4px;
       }
@@ -404,11 +639,11 @@
         border-radius: 2px;
       }
 
-      /* BUDGET */
+      /* ── BUDGET ────────────────────────────────────────────── */
       .budget-list {
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 9px;
       }
       .budget-item {
         padding: 10px 12px;
@@ -435,8 +670,8 @@
         font-weight: 500;
       }
       .bi-prog {
-        height: 5px;
-        background: rgba(255, 255, 255, 0.07);
+        height: 4px;
+        background: rgba(255, 255, 255, 0.06);
         border-radius: 3px;
       }
       .bi-fill {
@@ -444,27 +679,27 @@
         border-radius: 3px;
       }
 
-      /* ROI */
+      /* ── ROI BARS ──────────────────────────────────────────── */
       .roi-list {
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 9px;
       }
       .roi-row {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 9px;
         font-size: 12px;
       }
       .roi-lbl {
-        width: 90px;
+        width: 88px;
         color: var(--text2);
         flex-shrink: 0;
       }
       .roi-wrap {
         flex: 1;
-        height: 22px;
-        background: rgba(255, 255, 255, 0.05);
+        height: 20px;
+        background: rgba(255, 255, 255, 0.04);
         border-radius: 4px;
         overflow: hidden;
       }
@@ -473,42 +708,250 @@
         border-radius: 4px;
         display: flex;
         align-items: center;
-        padding: 0 8px;
-        font-size: 11px;
+        padding: 0 7px;
+        font-size: 10px;
         font-weight: 500;
-        color: rgba(255, 255, 255, 0.9);
+        color: rgba(255, 255, 255, 0.85);
       }
       .roi-val {
-        width: 50px;
+        width: 46px;
         text-align: right;
         font-family: "JetBrains Mono", monospace;
         color: var(--text);
       }
+
+      /* ── SPINNER / LOADING ─────────────────────────────────── */
       .spinner {
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        border: 2px solid rgba(255, 255, 255, 0.1);
+        width: 18px;
+        height: 18px;
+        border: 2px solid rgba(255, 255, 255, 0.08);
         border-top-color: var(--accent);
         border-radius: 50%;
-        animation: spin 0.8s linear infinite;
+        animation: spin 0.7s linear infinite;
       }
       @keyframes spin {
         to {
           transform: rotate(360deg);
         }
       }
-      .loading-overlay {
+      .loading-center {
         display: flex;
         align-items: center;
         justify-content: center;
-        height: 200px;
+        gap: 10px;
+        height: 160px;
         color: var(--text3);
-        gap: 12px;
+        font-size: 13px;
       }
 
-      /* ── NO-ADS MODAL ──────────────────────────────────────────── */
-      .noads-overlay {
+      /* ── EMPTY STATE ───────────────────────────────────────── */
+      .empty-state {
+        text-align: center;
+        padding: 48px 24px;
+        color: var(--text3);
+        font-size: 13px;
+      }
+      .empty-icon {
+        font-size: 36px;
+        margin-bottom: 12px;
+      }
+      .empty-title {
+        font-size: 15px;
+        font-weight: 500;
+        color: var(--text2);
+        margin-bottom: 6px;
+      }
+
+      /* ── SETTINGS VIEW ─────────────────────────────────────── */
+      .settings-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        margin-bottom: 20px;
+      }
+      .conn-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+        transition: border-color 0.2s;
+      }
+      .conn-card:hover {
+        border-color: rgba(255, 255, 255, 0.1);
+      }
+      .conn-card.connected {
+        border-color: rgba(0, 229, 160, 0.2);
+      }
+      .conn-card.needs-reauth {
+        border-color: rgba(255, 193, 7, 0.25);
+      }
+
+      .conn-card-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      .conn-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        font-weight: 700;
+        color: #fff;
+        flex-shrink: 0;
+      }
+      .conn-name {
+        font-size: 16px;
+        font-weight: 600;
+      }
+      .conn-type {
+        font-size: 12px;
+        color: var(--text2);
+      }
+
+      .conn-status-badge {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 11.5px;
+        font-weight: 500;
+        padding: 4px 10px;
+        border-radius: 20px;
+      }
+      .csb-on {
+        background: rgba(0, 229, 160, 0.1);
+        border: 1px solid rgba(0, 229, 160, 0.2);
+        color: var(--ok);
+      }
+      .csb-off {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--border);
+        color: var(--text3);
+      }
+      .csb-warn {
+        background: rgba(255, 193, 7, 0.1);
+        border: 1px solid rgba(255, 193, 7, 0.2);
+        color: var(--warn);
+      }
+
+      .conn-detail {
+        font-size: 12px;
+        color: var(--text2);
+        margin-bottom: 14px;
+        min-height: 36px;
+      }
+      .conn-detail strong {
+        color: var(--text);
+      }
+
+      .conn-actions {
+        display: flex;
+        gap: 8px;
+      }
+      .btn-connect {
+        flex: 1;
+        padding: 9px 14px;
+        border-radius: 9px;
+        font-size: 13px;
+        font-weight: 500;
+        font-family: "DM Sans", sans-serif;
+        cursor: pointer;
+        transition: all 0.18s;
+        border: none;
+      }
+      .btn-connect-primary {
+        background: var(--accent);
+        color: #fff;
+      }
+      .btn-connect-primary:hover {
+        background: #1976d2;
+        transform: translateY(-1px);
+      }
+      .btn-connect-secondary {
+        background: rgba(255, 61, 87, 0.1);
+        border: 1px solid rgba(255, 61, 87, 0.2);
+        color: var(--danger);
+      }
+      .btn-connect-secondary:hover {
+        background: rgba(255, 61, 87, 0.18);
+      }
+      .btn-connect-disabled {
+        background: var(--card);
+        border: 1px solid var(--border);
+        color: var(--text3);
+        cursor: not-allowed;
+      }
+      .btn-connect:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      /* Progress bar for token expiry */
+      .token-bar {
+        margin-top: 10px;
+      }
+      .token-bar-label {
+        display: flex;
+        justify-content: space-between;
+        font-size: 11px;
+        color: var(--text3);
+        margin-bottom: 4px;
+      }
+      .token-bar-track {
+        height: 3px;
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 2px;
+      }
+      .token-bar-fill {
+        height: 100%;
+        border-radius: 2px;
+      }
+
+      /* Settings info card */
+      .settings-info {
+        background: rgba(33, 150, 243, 0.05);
+        border: 1px solid rgba(33, 150, 243, 0.15);
+        border-radius: 12px;
+        padding: 16px;
+      }
+      .settings-info-title {
+        font-size: 13px;
+        font-weight: 500;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .settings-info ul {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .settings-info li {
+        font-size: 12px;
+        color: var(--text2);
+        display: flex;
+        align-items: flex-start;
+        gap: 7px;
+      }
+      .settings-info li::before {
+        content: "→";
+        color: var(--accent);
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+
+      /* ── MODAL (no-ads) ────────────────────────────────────── */
+      .overlay {
         position: fixed;
         inset: 0;
         background: rgba(0, 0, 0, 0.7);
@@ -516,180 +959,282 @@
         align-items: center;
         justify-content: center;
         z-index: 999;
-        backdrop-filter: blur(4px);
+        backdrop-filter: blur(6px);
       }
-      .noads-modal {
+      .modal {
         background: var(--bg2);
-        border: 1px solid rgba(30, 136, 229, 0.2);
+        border: 1px solid rgba(33, 150, 243, 0.2);
         border-radius: 20px;
-        padding: 36px 40px;
+        padding: 36px 38px;
         width: 100%;
-        max-width: 460px;
+        max-width: 450px;
         text-align: center;
-        animation: modalUp 0.35s ease;
-        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+        animation: modalUp 0.3s ease;
+        box-shadow: 0 32px 80px rgba(0, 0, 0, 0.5);
       }
       @keyframes modalUp {
         from {
           opacity: 0;
-          transform: translateY(20px);
+          transform: translateY(18px);
         }
         to {
           opacity: 1;
           transform: translateY(0);
         }
       }
-      .noads-icon {
-        font-size: 48px;
-        margin-bottom: 18px;
+      .modal-icon {
+        font-size: 44px;
+        margin-bottom: 16px;
       }
-      .noads-title {
-        font-size: 20px;
+      .modal-title {
+        font-size: 19px;
         font-weight: 600;
-        margin-bottom: 10px;
+        margin-bottom: 8px;
       }
-      .noads-sub {
-        font-size: 14px;
+      .modal-sub {
+        font-size: 13.5px;
         color: var(--text2);
-        line-height: 1.6;
-        margin-bottom: 28px;
+        line-height: 1.65;
+        margin-bottom: 24px;
       }
-      .noads-sub strong {
+      .modal-sub strong {
         color: var(--text);
       }
-      .noads-actions {
+      .modal-feats {
         display: flex;
-        flex-direction: column;
         gap: 10px;
+        margin-bottom: 24px;
       }
-      .noads-btn {
-        padding: 13px 20px;
-        border-radius: 10px;
-        border: none;
-        cursor: pointer;
-        font-size: 14px;
-        font-weight: 500;
-        font-family: "DM Sans", sans-serif;
-        transition: all 0.2s;
-      }
-      .noads-btn-primary {
-        background: var(--accent);
-        color: #fff;
-      }
-      .noads-btn-primary:hover {
-        background: #1976d2;
-        transform: translateY(-1px);
-      }
-      .noads-btn-secondary {
-        background: rgba(255, 255, 255, 0.05);
-        color: var(--text2);
-        border: 1px solid var(--border);
-      }
-      .noads-btn-secondary:hover {
-        background: rgba(255, 255, 255, 0.08);
-        color: var(--text);
-      }
-      .noads-features {
-        display: flex;
-        gap: 12px;
-        margin-bottom: 28px;
-      }
-      .noads-feature {
+      .modal-feat {
         flex: 1;
         background: rgba(255, 255, 255, 0.03);
         border: 1px solid var(--border);
         border-radius: 10px;
-        padding: 12px 10px;
-        font-size: 12px;
+        padding: 12px 8px;
+        font-size: 11.5px;
       }
-      .noads-feature-icon {
+      .modal-feat-icon {
         font-size: 20px;
         margin-bottom: 6px;
       }
-      .noads-feature-label {
+      .modal-feat-title {
+        font-weight: 500;
+        font-size: 12.5px;
+        margin-bottom: 3px;
+      }
+      .modal-feat-sub {
+        color: var(--text3);
+      }
+      .modal-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+      }
+      .modal-btn {
+        padding: 12px 20px;
+        border-radius: 10px;
+        border: none;
+        cursor: pointer;
+        font-size: 13.5px;
+        font-weight: 500;
+        font-family: "DM Sans", sans-serif;
+        transition: all 0.18s;
+      }
+      .modal-btn-primary {
+        background: var(--accent);
+        color: #fff;
+      }
+      .modal-btn-primary:hover {
+        background: #1976d2;
+        transform: translateY(-1px);
+      }
+      .modal-btn-sec {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--border);
         color: var(--text2);
       }
-      .noads-note {
+      .modal-btn-sec:hover {
+        background: rgba(255, 255, 255, 0.07);
+        color: var(--text);
+      }
+      .modal-note {
         font-size: 11px;
         color: var(--text3);
-        margin-top: 14px;
+        margin-top: 12px;
+      }
+
+      /* Comparison view (ALL tab) */
+      .compare-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      .compare-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 14px;
+        position: relative;
+      }
+      .compare-card::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        border-radius: 12px 12px 0 0;
+      }
+      .cc-fb::after {
+        background: var(--fb);
+      }
+      .cc-gg::after {
+        background: var(--gg);
+      }
+      .cc-tt::after {
+        background: var(--tt);
+      }
+      .cc-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+      .cc-name {
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .cc-source {
+        margin-left: auto;
+        font-size: 10px;
+        padding: 2px 7px;
+        border-radius: 4px;
+      }
+      .cc-src-api {
+        background: rgba(0, 229, 160, 0.1);
+        color: var(--ok);
+      }
+      .cc-src-mock {
+        background: rgba(255, 193, 7, 0.1);
+        color: var(--warn);
+      }
+      .cc-metrics {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+      }
+      .cc-metric {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+      }
+      .cc-metric-lbl {
+        color: var(--text2);
+      }
+      .cc-metric-val {
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 500;
+      }
+
+      /* Utility */
+      .mono {
+        font-family: "JetBrains Mono", monospace;
       }
     </style>
   </head>
   <body>
+    <!-- ══ SIDEBAR ══════════════════════════════════════════════════ -->
     <div class="sidebar">
-      <div class="logo">Ads<span>Analytics</span></div>
-      <a class="nav-item active" href="/dashboard">
+      <div class="logo">
+        <div class="logo-icon">A</div>
+        <div class="logo-text">Ads<em>Analytics</em></div>
+      </div>
+
+      <!-- Platform tabs -->
+      <div class="sb-section-label">Nền tảng</div>
+
+      <button class="nav-item" id="nav-all" onclick="switchView('all')">
+        <div class="p-icon p-all">∑</div>
+        <span>Tất cả</span>
+        <div class="conn-dot off" id="dot-all"></div>
+      </button>
+      <button
+        class="nav-item"
+        id="nav-facebook"
+        onclick="switchView('facebook')"
+      >
+        <div class="p-icon p-fb">f</div>
+        <span>Facebook</span>
+        <div class="conn-dot off" id="dot-facebook"></div>
+      </button>
+      <button class="nav-item" id="nav-google" onclick="switchView('google')">
+        <div class="p-icon p-gg">G</div>
+        <span>Google</span>
+        <div class="conn-dot off" id="dot-google"></div>
+      </button>
+      <button class="nav-item" id="nav-tiktok" onclick="switchView('tiktok')">
+        <div class="p-icon p-tt">T</div>
+        <span>TikTok</span>
+        <div class="conn-dot off" id="dot-tiktok"></div>
+      </button>
+
+      <!-- Other -->
+      <div class="sb-section-label" style="margin-top: 20px">Khác</div>
+      <button
+        class="nav-item"
+        id="nav-settings"
+        onclick="switchView('settings')"
+      >
         <svg
           class="nav-icon"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
         >
-          <rect x="3" y="3" width="7" height="7" rx="1" stroke-width="2" />
-          <rect x="14" y="3" width="7" height="7" rx="1" stroke-width="2" />
-          <rect x="3" y="14" width="7" height="7" rx="1" stroke-width="2" />
-          <rect x="14" y="14" width="7" height="7" rx="1" stroke-width="2" />
-        </svg>
-        Dashboard
-      </a>
-      <a class="nav-item" href="#">
-        <svg
-          class="nav-icon"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <polyline
-            points="22 12 18 12 15 21 9 3 6 12 2 12"
+          <circle cx="12" cy="12" r="3" stroke-width="2" />
+          <path
+            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
             stroke-width="2"
-            stroke-linecap="round"
           />
         </svg>
-        Chiến dịch
-      </a>
-      <a class="nav-item" href="#">
-        <svg
-          class="nav-icon"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <circle cx="12" cy="12" r="9" stroke-width="2" />
-          <path d="M12 8v4l3 3" stroke-width="2" stroke-linecap="round" />
-        </svg>
-        Lịch sử
-      </a>
-      <div class="sidebar-bottom">
-        <div class="user-card">
-          <div class="avatar" id="avatarBox">?</div>
-          <div>
-            <div class="user-name" id="usernameBox">{{ username }}</div>
-            <div class="user-role" id="roleBox">{{ role }}</div>
-          </div>
+        <span>Kết nối</span>
+        <div class="conn-dot off" id="dot-settings" style="display: none"></div>
+      </button>
+
+      <div class="sidebar-spacer"></div>
+
+      <div class="user-card">
+        <div class="avatar" id="avatarBox">?</div>
+        <div>
+          <div class="user-name" id="usernameBox">{{ username }}</div>
+          <div class="user-role" id="roleBox">{{ role }}</div>
         </div>
-        <button class="logout-btn" onclick="logout()">Đăng xuất</button>
       </div>
+      <button class="logout-btn" onclick="logout()">Đăng xuất</button>
     </div>
 
+    <!-- ══ MAIN ══════════════════════════════════════════════════════ -->
     <div class="main">
+      <!-- TOPBAR -->
       <div class="topbar">
         <div>
-          <div class="page-title">Marketing Dashboard</div>
-          <div style="font-size: 12px; color: var(--text3); margin-top: 3px">
-            Xin chào, <span style="color: var(--text2)">{{ username }}</span> —
-            <span id="clock">--:--:--</span>
+          <div class="page-title" id="pageTitle">Dashboard</div>
+          <div class="page-sub">
+            Xin chào
+            <strong style="color: var(--text2)">{{ username }}</strong> —
+            <span id="clock"></span>
           </div>
         </div>
-        <div style="display: flex; align-items: center; gap: 12px">
-          <div class="date-btns">
-            <button class="date-btn active" onclick="loadData(7, this)">
+        <div class="topbar-right">
+          <div class="date-btns" id="dateBtns">
+            <button class="date-btn active" onclick="setDays(7, this)">
               7 ngày
             </button>
-            <button class="date-btn" onclick="loadData(30, this)">
+            <button class="date-btn" onclick="setDays(30, this)">
               30 ngày
             </button>
-            <button class="date-btn" onclick="loadData(90, this)">
+            <button class="date-btn" onclick="setDays(90, this)">
               90 ngày
             </button>
           </div>
@@ -700,151 +1245,366 @@
         </div>
       </div>
 
-      <!-- Demo mode banner -->
+      <!-- DEMO BANNER -->
       <div class="demo-banner" id="demoBanner">
-        <span class="demo-banner-icon">🎭</span>
+        <span>🎭</span>
         <div class="demo-banner-text">
           Đang xem <strong>dữ liệu minh họa</strong> — kết nối tài khoản ads để
-          xem số liệu thực tế
+          thấy số liệu thực
         </div>
-        <button
-          onclick="connectAds()"
-          style="
-            margin-left: auto;
-            background: rgba(255, 184, 0, 0.15);
-            border: 1px solid rgba(255, 184, 0, 0.3);
-            color: var(--warn);
-            padding: 5px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 12px;
-            font-family: &quot;DM Sans&quot;, sans-serif;
-          "
-        >
-          Kết nối ngay
+        <button class="demo-btn-connect" onclick="switchView('settings')">
+          Kết nối ngay →
         </button>
       </div>
 
-      <div class="alert" id="alertBar">
-        <span style="font-size: 16px">⚠</span>
+      <!-- ALERT BAR -->
+      <div class="alert-bar" id="alertBar">
+        <span style="font-size: 15px">⚠</span>
         <div class="alert-text" id="alertText"></div>
       </div>
 
-      <div class="metrics-grid" id="metricsGrid">
-        <div class="metric m-blue">
-          <div class="m-label">Tổng chi phí</div>
-          <div class="loading-overlay"><div class="spinner"></div></div>
+      <!-- ══ VIEW: ALL ════════════════════════════════════════════════ -->
+      <div class="view active" id="view-all">
+        <div class="metrics-grid" id="metricsAll">
+          <div class="metric m-blue">
+            <div class="loading-center"><div class="spinner"></div></div>
+          </div>
+          <div class="metric m-green"></div>
+          <div class="metric m-orange"></div>
+          <div class="metric m-yellow"></div>
+          <div class="metric m-red"></div>
         </div>
-        <div class="metric m-green"></div>
-        <div class="metric m-orange"></div>
-        <div class="metric m-yellow"></div>
-        <div class="metric m-red"></div>
+
+        <!-- Compare cards -->
+        <div class="compare-grid" id="compareCards">
+          <!-- filled by JS -->
+        </div>
+
+        <div class="grid-2">
+          <div class="chart-card">
+            <div class="card-title">
+              Chi phí theo ngày <span>đơn vị: triệu đồng</span>
+            </div>
+            <div style="position: relative; height: 210px">
+              <canvas id="chartAll"></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="card-title">Hiệu suất theo kênh</div>
+            <table class="ch-table" id="chTableAll">
+              <tbody>
+                <tr>
+                  <td colspan="5">
+                    <div class="loading-center">
+                      <div class="spinner"></div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="grid-2b">
+          <div class="chart-card">
+            <div class="card-title">ROI theo kênh</div>
+            <div class="roi-list" id="roiAll">
+              <div class="loading-center"><div class="spinner"></div></div>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="card-title">Ngân sách tháng</div>
+            <div class="budget-list" id="budgetAll">
+              <div class="loading-center"><div class="spinner"></div></div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="grid-2">
-        <div class="chart-card">
-          <div class="card-title">
-            Chi phí theo ngày
-            <span style="font-size: 11px; color: var(--text3)"
-              >đơn vị: triệu đồng</span
-            >
+      <!-- ══ VIEW: FACEBOOK ═══════════════════════════════════════════ -->
+      <div class="view" id="view-facebook">
+        <div class="platform-header">
+          <div class="p-icon-lg" style="background: var(--fb)">f</div>
+          <div>
+            <div class="ph-name">Facebook Ads</div>
+            <div class="ph-meta" id="ph-fb-meta">Đang tải...</div>
           </div>
-          <div style="position: relative; height: 220px">
-            <canvas id="spendChart"></canvas>
+          <div class="ph-status mock" id="ph-fb-status">
+            <div class="dot-lg"></div>
+            <span>Demo data</span>
           </div>
         </div>
-        <div class="chart-card">
-          <div class="card-title">Hiệu suất theo kênh</div>
-          <table class="ch-table" id="chTable">
-            <tbody>
-              <tr>
-                <td colspan="4">
-                  <div class="loading-overlay"><div class="spinner"></div></div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="metrics-grid" id="metricsFb">
+          <div class="metric m-blue">
+            <div class="loading-center"><div class="spinner"></div></div>
+          </div>
+          <div class="metric m-green"></div>
+          <div class="metric m-orange"></div>
+          <div class="metric m-yellow"></div>
+          <div class="metric m-red"></div>
+        </div>
+        <div class="grid-2">
+          <div class="chart-card">
+            <div class="card-title">
+              Chi phí theo ngày <span>triệu đồng</span>
+            </div>
+            <div style="position: relative; height: 210px">
+              <canvas id="chartFb"></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="card-title">Chỉ số chi tiết</div>
+            <div id="fbDetail">
+              <div class="loading-center"><div class="spinner"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="grid-2b">
+          <div class="chart-card">
+            <div class="card-title">ROI &amp; Phân bổ</div>
+            <div class="roi-list" id="roiFb">
+              <div class="loading-center"><div class="spinner"></div></div>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="card-title">Ngân sách Facebook</div>
+            <div class="budget-list" id="budgetFb">
+              <div class="loading-center"><div class="spinner"></div></div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="grid-2b">
-        <div class="chart-card">
-          <div class="card-title">ROI theo kênh</div>
-          <div class="roi-list" id="roiList">
-            <div class="loading-overlay"><div class="spinner"></div></div>
+      <!-- ══ VIEW: GOOGLE ══════════════════════════════════════════════ -->
+      <div class="view" id="view-google">
+        <div class="platform-header">
+          <div class="p-icon-lg" style="background: var(--gg)">G</div>
+          <div>
+            <div class="ph-name">Google Ads</div>
+            <div class="ph-meta" id="ph-gg-meta">Đang tải...</div>
+          </div>
+          <div class="ph-status mock" id="ph-gg-status">
+            <div class="dot-lg"></div>
+            <span>Demo data</span>
           </div>
         </div>
-        <div class="chart-card">
-          <div class="card-title">Ngân sách tháng</div>
-          <div class="budget-list" id="budgetList">
-            <div class="loading-overlay"><div class="spinner"></div></div>
+        <div class="metrics-grid" id="metricsGg">
+          <div class="metric m-blue">
+            <div class="loading-center"><div class="spinner"></div></div>
           </div>
+          <div class="metric m-green"></div>
+          <div class="metric m-orange"></div>
+          <div class="metric m-yellow"></div>
+          <div class="metric m-red"></div>
+        </div>
+        <div class="grid-2">
+          <div class="chart-card">
+            <div class="card-title">
+              Chi phí theo ngày <span>triệu đồng</span>
+            </div>
+            <div style="position: relative; height: 210px">
+              <canvas id="chartGg"></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="card-title">Chỉ số chi tiết</div>
+            <div id="ggDetail">
+              <div class="loading-center"><div class="spinner"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="grid-2b">
+          <div class="chart-card">
+            <div class="card-title">ROI &amp; Phân bổ</div>
+            <div class="roi-list" id="roiGg">
+              <div class="loading-center"><div class="spinner"></div></div>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="card-title">Ngân sách Google</div>
+            <div class="budget-list" id="budgetGg">
+              <div class="loading-center"><div class="spinner"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ VIEW: TIKTOK ══════════════════════════════════════════════ -->
+      <div class="view" id="view-tiktok">
+        <div class="platform-header">
+          <div class="p-icon-lg" style="background: var(--tt); color: #111">
+            T
+          </div>
+          <div>
+            <div class="ph-name">TikTok Ads</div>
+            <div class="ph-meta" id="ph-tt-meta">Đang tải...</div>
+          </div>
+          <div class="ph-status mock" id="ph-tt-status">
+            <div class="dot-lg"></div>
+            <span>Demo data</span>
+          </div>
+        </div>
+        <div class="metrics-grid" id="metricsTt">
+          <div class="metric m-blue">
+            <div class="loading-center"><div class="spinner"></div></div>
+          </div>
+          <div class="metric m-green"></div>
+          <div class="metric m-orange"></div>
+          <div class="metric m-yellow"></div>
+          <div class="metric m-red"></div>
+        </div>
+        <div class="grid-2">
+          <div class="chart-card">
+            <div class="card-title">
+              Chi phí theo ngày <span>triệu đồng</span>
+            </div>
+            <div style="position: relative; height: 210px">
+              <canvas id="chartTt"></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="card-title">Chỉ số chi tiết</div>
+            <div id="ttDetail">
+              <div class="loading-center"><div class="spinner"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="grid-2b">
+          <div class="chart-card">
+            <div class="card-title">ROI &amp; Phân bổ</div>
+            <div class="roi-list" id="roiTt">
+              <div class="loading-center"><div class="spinner"></div></div>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="card-title">Ngân sách TikTok</div>
+            <div class="budget-list" id="budgetTt">
+              <div class="loading-center"><div class="spinner"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ VIEW: SETTINGS ═══════════════════════════════════════════ -->
+      <div class="view" id="view-settings">
+        <div class="settings-grid" id="settingsGrid">
+          <!-- filled by renderSettings() -->
+          <div class="conn-card">
+            <div class="loading-center"><div class="spinner"></div></div>
+          </div>
+          <div class="conn-card">
+            <div class="loading-center"><div class="spinner"></div></div>
+          </div>
+          <div class="conn-card">
+            <div class="loading-center"><div class="spinner"></div></div>
+          </div>
+        </div>
+        <div class="settings-info">
+          <div class="settings-info-title">ℹ️ Thông tin kết nối</div>
+          <ul>
+            <li>
+              Sau khi kết nối, dữ liệu thực từ tài khoản Ads sẽ được hiển thị
+              thay thế dữ liệu minh họa.
+            </li>
+            <li>
+              Token Facebook có thời hạn ~60 ngày và sẽ được tự động làm mới nếu
+              còn hạn.
+            </li>
+            <li>
+              Google Ads và TikTok Ads đang trong giai đoạn tích hợp — cần cấu
+              hình thêm credentials trong .env.
+            </li>
+            <li>
+              Ngắt kết nối sẽ xoá token khỏi hệ thống nhưng không ảnh hưởng đến
+              tài khoản Ads của bạn.
+            </li>
+          </ul>
         </div>
       </div>
     </div>
+    <!-- /main -->
 
-    <!-- ── NO ADS MODAL ─────────────────────────────────────────────── -->
-    <div class="noads-overlay" id="noAdsModal" style="display: none">
-      <div class="noads-modal">
-        <div class="noads-icon">📊</div>
-        <div class="noads-title">Chưa có dữ liệu quảng cáo</div>
-        <div class="noads-sub">
+    <!-- ══ NO-ADS MODAL ══════════════════════════════════════════════ -->
+    <div class="overlay" id="noAdsOverlay" style="display: none">
+      <div class="modal">
+        <div class="modal-icon">📊</div>
+        <div class="modal-title">Chưa có dữ liệu quảng cáo</div>
+        <div class="modal-sub">
           Tài khoản <strong>{{ username }}</strong> chưa kết nối với nền tảng
           ads nào.<br />
           Bạn muốn làm gì tiếp theo?
         </div>
-        <div class="noads-features">
-          <div class="noads-feature">
-            <div class="noads-feature-icon">🎭</div>
-            <div style="font-weight: 500; margin-bottom: 4px; font-size: 13px">
-              Xem minh họa
-            </div>
-            <div class="noads-feature-label">Dữ liệu mẫu chuyên nghiệp</div>
+        <div class="modal-feats">
+          <div class="modal-feat">
+            <div class="modal-feat-icon">🎭</div>
+            <div class="modal-feat-title">Xem minh họa</div>
+            <div class="modal-feat-sub">Dữ liệu mẫu chuyên nghiệp</div>
           </div>
-          <div class="noads-feature">
-            <div class="noads-feature-icon">📈</div>
-            <div style="font-weight: 500; margin-bottom: 4px; font-size: 13px">
-              Đầy đủ biểu đồ
-            </div>
-            <div class="noads-feature-label">Charts, ROI, ngân sách</div>
+          <div class="modal-feat">
+            <div class="modal-feat-icon">📈</div>
+            <div class="modal-feat-title">Đầy đủ biểu đồ</div>
+            <div class="modal-feat-sub">Charts, ROI, ngân sách</div>
           </div>
-          <div class="noads-feature">
-            <div class="noads-feature-icon">🔗</div>
-            <div style="font-weight: 500; margin-bottom: 4px; font-size: 13px">
-              Kết nối sau
-            </div>
-            <div class="noads-feature-label">Dễ dàng nâng cấp</div>
+          <div class="modal-feat">
+            <div class="modal-feat-icon">🔗</div>
+            <div class="modal-feat-title">Kết nối sau</div>
+            <div class="modal-feat-sub">Dễ dàng nâng cấp</div>
           </div>
         </div>
-        <div class="noads-actions">
-          <button class="noads-btn noads-btn-primary" onclick="useFakeData()">
+        <div class="modal-actions">
+          <button class="modal-btn modal-btn-primary" onclick="useFakeData()">
             🎭 Xem hình ảnh minh họa
           </button>
-          <button class="noads-btn noads-btn-secondary" onclick="connectAds()">
+          <button class="modal-btn modal-btn-sec" onclick="goSettings()">
             🔗 Kết nối tài khoản ads
           </button>
-          <button
-            class="noads-btn noads-btn-secondary"
-            onclick="continueEmpty()"
-          >
+          <button class="modal-btn modal-btn-sec" onclick="closeModal()">
             Tiếp tục không có dữ liệu
           </button>
         </div>
-        <div class="noads-note">
-          Dữ liệu minh họa chỉ dùng cho mục đích xem trước, không phản ánh số
-          liệu thực tế
+        <div class="modal-note">
+          Dữ liệu minh họa chỉ dùng cho mục đích xem trước
         </div>
       </div>
     </div>
 
     <script>
-      const username = "{{ username }}";
-      const role = "{{ role }}";
-      document.getElementById("avatarBox").textContent = username
-        .charAt(0)
-        .toUpperCase();
-      document.getElementById("usernameBox").textContent = username;
-      document.getElementById("roleBox").textContent = role;
+      // ── GLOBALS ─────────────────────────────────────────────────────
+      const USERNAME = "{{ username }}";
+      const ROLE = "{{ role }}";
+
+      let currentView = "all";
+      let currentDays = 7;
+      let forceMock = false;
+      let connections = {}; // loaded once
+      let charts = {}; // Chart.js instances
+
+      const PLATFORM_META = {
+        facebook: {
+          name: "Facebook Ads",
+          icon: "f",
+          bg: "var(--fb)",
+          color: "#1877f2",
+        },
+        google: {
+          name: "Google Ads",
+          icon: "G",
+          bg: "var(--gg)",
+          color: "#ea4335",
+        },
+        tiktok: {
+          name: "TikTok Ads",
+          icon: "T",
+          bg: "var(--tt)",
+          color: "#69c9d0",
+        },
+      };
+
+      // ── INIT ─────────────────────────────────────────────────────────
+      document.getElementById("avatarBox").textContent =
+        USERNAME.charAt(0).toUpperCase();
+      document.getElementById("usernameBox").textContent = USERNAME;
+      document.getElementById("roleBox").textContent = ROLE;
 
       setInterval(() => {
         document.getElementById("clock").textContent =
@@ -853,99 +1613,252 @@
       document.getElementById("clock").textContent =
         new Date().toLocaleTimeString("vi-VN");
 
-      let spendChart = null;
-      let usingFakeData = false;
+      // Check URL params for OAuth callback messages
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get("connected")) {
+        const p = urlParams.get("connected");
+        showToast(
+          `✅ Kết nối ${PLATFORM_META[p]?.name || p} thành công!`,
+          "ok",
+        );
+        history.replaceState({}, "", "/dashboard");
+      }
+      if (urlParams.get("error")) {
+        showToast(`❌ Lỗi: ${urlParams.get("error")}`, "danger");
+        history.replaceState({}, "", "/dashboard");
+      }
 
+      // ── TOAST ────────────────────────────────────────────────────────
+      function showToast(msg, type = "ok") {
+        const colors = {
+          ok: "var(--ok)",
+          danger: "var(--danger)",
+          warn: "var(--warn)",
+        };
+        const t = document.createElement("div");
+        t.style.cssText = `
+    position:fixed;bottom:24px;right:24px;z-index:9999;
+    background:var(--bg2);border:1px solid ${colors[type]};
+    border-radius:10px;padding:11px 18px;font-size:13px;
+    color:var(--text);box-shadow:0 8px 32px rgba(0,0,0,.4);
+    animation:modalUp .3s ease;max-width:340px;line-height:1.5;
+  `;
+        t.textContent = msg;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 4000);
+      }
+
+      // ── FORMATTERS ───────────────────────────────────────────────────
       function fmt(n) {
         return new Intl.NumberFormat("vi-VN").format(Math.round(n));
       }
       function fmtM(n) {
-        return (n / 1000000).toFixed(1) + "M";
+        return (n / 1_000_000).toFixed(1) + "M";
+      }
+      function fmtMini(n) {
+        if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + "M";
+        if (n >= 1_000) return (n / 1_000).toFixed(0) + "K";
+        return String(Math.round(n));
       }
 
-      async function loadData(days = 7, btn = null) {
-        if (btn) {
+      // ── VIEW SWITCHER ────────────────────────────────────────────────
+      function switchView(name) {
+        // Hide all views
+        document
+          .querySelectorAll(".view")
+          .forEach((v) => v.classList.remove("active"));
+        document
+          .querySelectorAll(".nav-item")
+          .forEach((n) => n.classList.remove("active"));
+        document.getElementById("view-" + name).classList.add("active");
+        document.getElementById("nav-" + name).classList.add("active");
+
+        // Update topbar
+        const titles = {
+          all: "Tổng hợp tất cả kênh",
+          facebook: "Facebook Ads",
+          google: "Google Ads",
+          tiktok: "TikTok Ads",
+          settings: "Kết nối nền tảng",
+        };
+        document.getElementById("pageTitle").textContent =
+          titles[name] || "Dashboard";
+
+        // Show/hide date picker (not needed in settings)
+        document.getElementById("dateBtns").style.display =
+          name === "settings" ? "none" : "flex";
+
+        currentView = name;
+
+        if (name === "settings") {
+          loadSettings();
+        } else {
+          loadView(name);
+        }
+      }
+
+      // ── DAYS SETTER ──────────────────────────────────────────────────
+      function setDays(d, btn) {
+        currentDays = d;
+        document
+          .querySelectorAll(".date-btn")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        if (currentView !== "settings") loadView(currentView);
+      }
+
+      // ── LOAD CONNECTIONS STATUS ──────────────────────────────────────
+      async function loadConnectionStatus() {
+        try {
+          const res = await fetch("/api/connections/status");
+          connections = await res.json();
+        } catch (e) {
+          connections = {};
+        }
+        // Update sidebar dots
+        for (const p of ["facebook", "google", "tiktok"]) {
+          const dot = document.getElementById("dot-" + p);
+          if (!dot) continue;
+          const c = connections[p];
+          if (c?.connected && !c?.needs_reauth) {
+            dot.className = "conn-dot on";
+          } else if (c?.needs_reauth) {
+            dot.className = "conn-dot warn";
+          } else {
+            dot.className = "conn-dot off";
+          }
+        }
+        // Update ALL dot
+        const anyConn = Object.values(connections).some((c) => c.connected);
+        document.getElementById("dot-all").className = anyConn
+          ? "conn-dot on"
+          : "conn-dot off";
+      }
+
+      // ── MAIN LOAD ────────────────────────────────────────────────────
+      async function loadView(platform) {
+        const isAll = platform === "all";
+        const url = `/api/dashboard-data?days=${currentDays}&platform=${platform}${forceMock ? "&force_mock=1" : ""}`;
+
+        try {
+          const res = await fetch(url);
+          const d = await res.json();
+
+          // Show modal if no ads data and user hasn't chosen fake yet
+          if (
+            d.no_ads_data &&
+            !forceMock &&
+            !sessionStorage.getItem("dismissedModal")
+          ) {
+            document.getElementById("noAdsOverlay").style.display = "flex";
+            return;
+          }
+
+          // Demo banner
+          const anyMock = isAll
+            ? Object.values(d.channel_stats).some((c) => c.is_mock)
+            : d.channel_stats[platform]?.is_mock;
           document
-            .querySelectorAll(".date-btn")
-            .forEach((b) => b.classList.remove("active"));
-          btn.classList.add("active");
-        }
-        const res = await fetch(`/api/dashboard-data?days=${days}`);
-        const d = await res.json();
+            .getElementById("demoBanner")
+            .classList.toggle("show", Boolean(anyMock));
 
-        // Check if user has no real ads data
-        if (d.no_ads_data && !usingFakeData) {
-          document.getElementById("noAdsModal").style.display = "flex";
-          window._pendingDays = days;
-          return;
-        }
+          // Alert bar
+          checkAlerts(d.budgets, d.channel_stats);
 
-        renderAll(d);
-      }
-
-      function renderAll(d) {
-        renderMetrics(d);
-        renderChart(d);
-        renderChannels(d);
-        renderROI(d);
-        renderBudgets(d);
-        checkAlerts(d);
-        // Show demo banner if using fake data
-        if (d.source === "mock" || usingFakeData) {
-          document.getElementById("demoBanner").style.display = "flex";
+          if (isAll) {
+            renderAllMetrics(d);
+            renderCompareCards(d);
+            renderAllChart(d);
+            renderChannelTable("chTableAll", d.channel_stats, d.budgets);
+            renderROI("roiAll", d.channel_stats);
+            renderBudgets("budgetAll", d.budgets, d.channel_stats);
+          } else {
+            renderPlatformView(platform, d);
+          }
+        } catch (e) {
+          console.error(e);
+          showToast("Lỗi tải dữ liệu: " + e.message, "danger");
         }
       }
 
-      // ── Modal actions ────────────────────────────────────────────────
-      function useFakeData() {
-        usingFakeData = true;
-        document.getElementById("noAdsModal").style.display = "none";
-        // Fetch with force_mock flag
-        const days = window._pendingDays || 7;
-        fetch(`/api/dashboard-data?days=${days}&force_mock=1`)
-          .then((r) => r.json())
-          .then((d) => renderAll(d));
+      // ── ALL: METRICS ─────────────────────────────────────────────────
+      function renderAllMetrics(d) {
+        document.getElementById("metricsAll").innerHTML = `
+    <div class="metric m-blue">
+      <div class="m-label">Tổng chi phí</div>
+      <div class="m-value" style="color:var(--accent)">${fmtM(d.total_spend)}</div>
+      <div class="m-sub up">↑ 12.3% so tháng trước</div>
+    </div>
+    <div class="metric m-green">
+      <div class="m-label">Doanh thu (ước)</div>
+      <div class="m-value" style="color:var(--ok)">${fmtM(d.total_revenue)}</div>
+      <div class="m-sub up">↑ 18.7% vs tháng trước</div>
+    </div>
+    <div class="metric m-orange">
+      <div class="m-label">ROAS trung bình</div>
+      <div class="m-value" style="color:var(--orange)">${d.roas}x</div>
+      <div class="m-sub" style="color:var(--text3)">Mục tiêu: 4.0x</div>
+    </div>
+    <div class="metric m-yellow">
+      <div class="m-label">ROI tổng</div>
+      <div class="m-value" style="color:var(--warn)">${d.roi}%</div>
+      <div class="m-sub up">↑ 6.4% kỳ trước</div>
+    </div>
+    <div class="metric m-red">
+      <div class="m-label">CPA trung bình</div>
+      <div class="m-value" style="color:var(--danger)">${fmt(d.cpa)}đ</div>
+      <div class="m-sub" style="color:var(--text3)">Mục tiêu: 120,000đ</div>
+    </div>`;
       }
 
-      function continueEmpty() {
-        document.getElementById("noAdsModal").style.display = "none";
-        // Show empty state
-        document.getElementById("metricsGrid").innerHTML = `
-          <div class="metric m-blue"><div class="m-label">Tổng chi phí</div><div style="color:var(--text3);font-size:22px;font-weight:600;font-family:'JetBrains Mono',monospace;margin-top:8px">—</div></div>
-          <div class="metric m-green"><div class="m-label">Doanh thu</div><div style="color:var(--text3);font-size:22px;font-weight:600;font-family:'JetBrains Mono',monospace;margin-top:8px">—</div></div>
-          <div class="metric m-orange"><div class="m-label">ROAS</div><div style="color:var(--text3);font-size:22px;font-weight:600;font-family:'JetBrains Mono',monospace;margin-top:8px">—</div></div>
-          <div class="metric m-yellow"><div class="m-label">ROI</div><div style="color:var(--text3);font-size:22px;font-weight:600;font-family:'JetBrains Mono',monospace;margin-top:8px">—</div></div>
-          <div class="metric m-red"><div class="m-label">CPA</div><div style="color:var(--text3);font-size:22px;font-weight:600;font-family:'JetBrains Mono',monospace;margin-top:8px">—</div></div>`;
-        document.getElementById("roiList").innerHTML =
-          '<div style="color:var(--text3);font-size:13px;text-align:center;padding:30px">Chưa có dữ liệu</div>';
-        document.getElementById("budgetList").innerHTML =
-          '<div style="color:var(--text3);font-size:13px;text-align:center;padding:30px">Chưa có ngân sách</div>';
-        document.getElementById("chTable").innerHTML =
-          '<tbody><tr><td colspan="5" style="text-align:center;color:var(--text3);padding:30px">Chưa có dữ liệu</td></tr></tbody>';
+      // ── ALL: COMPARE CARDS ────────────────────────────────────────────
+      function renderCompareCards(d) {
+        const platforms = ["facebook", "google", "tiktok"];
+        const icons = {
+          facebook: { icon: "f", bg: "var(--fb)", cls: "cc-fb" },
+          google: { icon: "G", bg: "var(--gg)", cls: "cc-gg" },
+          tiktok: { icon: "T", bg: "var(--tt)", cls: "cc-tt" },
+        };
+
+        // Only show platforms that are connected OR all if none connected
+        const toShow = platforms.filter((p) => d.channel_stats[p]);
+
+        document.getElementById("compareCards").innerHTML = toShow
+          .map((p) => {
+            const s = d.channel_stats[p];
+            const m = icons[p];
+            const srcCls = s.is_mock ? "cc-src-mock" : "cc-src-api";
+            const srcLbl = s.is_mock ? "🎭 Demo" : "✅ Live";
+            const roasColor =
+              s.roas >= 4
+                ? "var(--ok)"
+                : s.roas >= 3
+                  ? "var(--warn)"
+                  : "var(--danger)";
+            return `
+      <div class="compare-card ${m.cls}">
+        <div class="cc-header">
+          <div class="p-icon ${p === "tiktok" ? "p-tt" : p === "google" ? "p-gg" : "p-fb"}">${m.icon}</div>
+          <div class="cc-name">${PLATFORM_META[p].name}</div>
+          <span class="cc-source ${srcCls}">${srcLbl}</span>
+        </div>
+        <div class="cc-metrics">
+          <div class="cc-metric"><span class="cc-metric-lbl">Chi phí</span><span class="cc-metric-val">${fmtM(s.spend)}</span></div>
+          <div class="cc-metric"><span class="cc-metric-lbl">Doanh thu</span><span class="cc-metric-val">${fmtM(s.revenue)}</span></div>
+          <div class="cc-metric"><span class="cc-metric-lbl">ROAS</span><span class="cc-metric-val" style="color:${roasColor}">${s.roas}x</span></div>
+          <div class="cc-metric"><span class="cc-metric-lbl">CTR</span><span class="cc-metric-val">${s.ctr}%</span></div>
+          <div class="cc-metric"><span class="cc-metric-lbl">CPA</span><span class="cc-metric-val">${fmtMini(s.cpa)}đ</span></div>
+        </div>
+      </div>`;
+          })
+          .join("");
       }
 
-      function connectAds() {
-        document.getElementById("noAdsModal").style.display = "none";
-        // Placeholder: redirect to settings or show connect flow
-        alert(
-          "Tính năng kết nối tài khoản ads đang được phát triển.\nVui lòng liên hệ admin để được hỗ trợ.",
-        );
-      }
-
-      // ── Render functions ─────────────────────────────────────────────
-      function renderMetrics(d) {
-        document.getElementById("metricsGrid").innerHTML = `
-          <div class="metric m-blue"><div class="m-label">Tổng chi phí</div><div class="m-value" style="color:var(--accent)">${fmtM(d.total_spend)}</div><div class="m-sub up">↑ 12.3% so tháng trước</div></div>
-          <div class="metric m-green"><div class="m-label">Doanh thu (ước)</div><div class="m-value" style="color:var(--ok)">${fmtM(d.total_revenue)}</div><div class="m-sub up">↑ 18.7% vs tháng trước</div></div>
-          <div class="metric m-orange"><div class="m-label">ROAS trung bình</div><div class="m-value" style="color:#FF6B35">${d.roas}x</div><div class="m-sub" style="color:var(--text3)">Mục tiêu: 4.0x</div></div>
-          <div class="metric m-yellow"><div class="m-label">ROI tổng</div><div class="m-value" style="color:var(--warn)">${d.roi}%</div><div class="m-sub up">↑ 6.4% kỳ trước</div></div>
-          <div class="metric m-red"><div class="m-label">CPA trung bình</div><div class="m-value" style="color:var(--danger)">${fmt(d.cpa)}đ</div><div class="m-sub" style="color:var(--text3)">Mục tiêu: 120,000đ</div></div>`;
-      }
-
-      function renderChart(d) {
-        const ctx = document.getElementById("spendChart").getContext("2d");
-        if (spendChart) spendChart.destroy();
-        spendChart = new Chart(ctx, {
+      // ── ALL: CHART ────────────────────────────────────────────────────
+      function renderAllChart(d) {
+        destroyChart("all");
+        const ctx = document.getElementById("chartAll").getContext("2d");
+        charts["all"] = new Chart(ctx, {
           type: "bar",
           data: {
             labels: d.labels,
@@ -953,68 +1866,185 @@
               {
                 label: "Facebook",
                 data: d.spend_series.facebook,
-                backgroundColor: "rgba(24,119,242,0.75)",
+                backgroundColor: "rgba(24,119,242,.75)",
                 borderRadius: 4,
                 stack: "s",
               },
               {
                 label: "Google",
                 data: d.spend_series.google,
-                backgroundColor: "rgba(234,67,53,0.75)",
+                backgroundColor: "rgba(234,67,53,.75)",
                 borderRadius: 4,
                 stack: "s",
               },
               {
                 label: "TikTok",
                 data: d.spend_series.tiktok,
-                backgroundColor: "rgba(160,160,160,0.6)",
+                backgroundColor: "rgba(105,201,208,.6)",
                 borderRadius: 4,
                 stack: "s",
               },
             ],
           },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: { display: false },
-              tooltip: {
-                callbacks: { label: (c) => `${c.dataset.label}: ${c.raw}M` },
-              },
-            },
-            scales: {
-              x: {
-                grid: { color: "rgba(255,255,255,0.04)" },
-                ticks: { color: "#5A6A82", font: { size: 11 } },
-                stacked: true,
-              },
-              y: {
-                grid: { color: "rgba(255,255,255,0.04)" },
-                ticks: {
-                  color: "#5A6A82",
-                  font: { size: 11 },
-                  callback: (v) => v + "M",
-                },
-                stacked: true,
-              },
-            },
-          },
+          options: chartOptions({
+            stacked: true,
+            labelFn: (c) => `${c.dataset.label}: ${c.raw}M`,
+          }),
         });
       }
 
-      function renderChannels(d) {
-        const ch = d.channel_stats;
-        const budgets = d.budgets || {};
+      // ── PLATFORM VIEW ─────────────────────────────────────────────────
+      function renderPlatformView(platform, d) {
+        const cs = d.channel_stats[platform];
+        if (!cs) return;
+
+        // Update header status
+        const statusEl = document.getElementById(
+          `ph-${platform2short(platform)}-status`,
+        );
+        const metaEl = document.getElementById(
+          `ph-${platform2short(platform)}-meta`,
+        );
+
+        if (cs.is_connected && !cs.is_mock) {
+          statusEl.className = "ph-status connected";
+          statusEl.innerHTML =
+            '<div class="dot-lg"></div><span>Dữ liệu thực</span>';
+          const c = connections[platform];
+          metaEl.textContent = c?.account_name
+            ? `${c.account_name} · ${c.account_id}`
+            : "Đang kết nối";
+        } else if (cs.is_connected && cs.is_mock) {
+          statusEl.className = "ph-status mock";
+          statusEl.innerHTML =
+            '<div class="dot-lg"></div><span>Cần làm mới</span>';
+          metaEl.textContent = "Token hết hạn — vào Kết nối để làm mới";
+        } else {
+          statusEl.className = "ph-status mock";
+          statusEl.innerHTML =
+            '<div class="dot-lg"></div><span>Demo data</span>';
+          metaEl.textContent = "Chưa kết nối — đang hiển thị dữ liệu minh họa";
+        }
+
+        // Metrics
+        const metricsId = {
+          facebook: "metricsFb",
+          google: "metricsGg",
+          tiktok: "metricsTt",
+        }[platform];
+        document.getElementById(metricsId).innerHTML = `
+    <div class="metric m-blue">
+      <div class="m-label">Chi phí</div>
+      <div class="m-value" style="color:var(--accent)">${fmtM(cs.spend)}</div>
+      <div class="m-sub" style="color:var(--text3)">${currentDays} ngày gần nhất</div>
+    </div>
+    <div class="metric m-green">
+      <div class="m-label">Doanh thu (ước)</div>
+      <div class="m-value" style="color:var(--ok)">${fmtM(cs.revenue)}</div>
+      <div class="m-sub up">Từ conversion</div>
+    </div>
+    <div class="metric m-orange">
+      <div class="m-label">ROAS</div>
+      <div class="m-value" style="color:var(--orange)">${cs.roas}x</div>
+      <div class="m-sub" style="color:${cs.roas >= 4 ? "var(--ok)" : cs.roas >= 3 ? "var(--warn)" : "var(--danger)"}">
+        ${cs.roas >= 4 ? "Xuất sắc" : cs.roas >= 3 ? "Trung bình" : "Cần cải thiện"}
+      </div>
+    </div>
+    <div class="metric m-yellow">
+      <div class="m-label">ROI</div>
+      <div class="m-value" style="color:var(--warn)">${cs.roi}%</div>
+      <div class="m-sub up">Lợi nhuận ròng</div>
+    </div>
+    <div class="metric m-red">
+      <div class="m-label">CPA</div>
+      <div class="m-value" style="color:var(--danger)">${fmt(cs.cpa)}đ</div>
+      <div class="m-sub" style="color:var(--text3)">Chi phí / chuyển đổi</div>
+    </div>`;
+
+        // Single platform chart
+        const chartId = {
+          facebook: "chartFb",
+          google: "chartGg",
+          tiktok: "chartTt",
+        }[platform];
+        const chartKey = platform;
+        const colors = {
+          facebook: "rgba(24,119,242,.8)",
+          google: "rgba(234,67,53,.8)",
+          tiktok: "rgba(105,201,208,.75)",
+        };
+        destroyChart(chartKey);
+        const ctx = document.getElementById(chartId).getContext("2d");
+        charts[chartKey] = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: d.labels,
+            datasets: [
+              {
+                label: PLATFORM_META[platform].name,
+                data: d.spend_series[platform],
+                backgroundColor: colors[platform],
+                borderRadius: 5,
+              },
+            ],
+          },
+          options: chartOptions({
+            stacked: false,
+            labelFn: (c) => `${fmtM(c.raw * 1_000_000)}`,
+          }),
+        });
+
+        // Detail table
+        const detailId = {
+          facebook: "fbDetail",
+          google: "ggDetail",
+          tiktok: "ttDetail",
+        }[platform];
+        document.getElementById(detailId).innerHTML = `
+    <table class="ch-table">
+      <tbody>
+        <tr><td style="color:var(--text2)">Lượt hiển thị</td><td class="mono" style="text-align:right">${fmt(cs.impressions)}</td></tr>
+        <tr><td style="color:var(--text2)">Lượt nhấp</td><td class="mono" style="text-align:right">${fmt(cs.clicks)}</td></tr>
+        <tr><td style="color:var(--text2)">CTR</td><td class="mono" style="text-align:right">${cs.ctr}%</td></tr>
+        <tr><td style="color:var(--text2)">Chi phí / click</td><td class="mono" style="text-align:right">${fmt(cs.spend / Math.max(cs.clicks, 1))}đ</td></tr>
+        <tr><td style="color:var(--text2)">ROAS</td><td class="mono" style="text-align:right;color:${cs.roas >= 4 ? "var(--ok)" : cs.roas >= 3 ? "var(--warn)" : "var(--danger)"}">${cs.roas}x</td></tr>
+      </tbody>
+    </table>`;
+
+        // ROI
+        const roiId = { facebook: "roiFb", google: "roiGg", tiktok: "roiTt" }[
+          platform
+        ];
+        renderROI(roiId, d.channel_stats);
+
+        // Budget
+        const budgetId = {
+          facebook: "budgetFb",
+          google: "budgetGg",
+          tiktok: "budgetTt",
+        }[platform];
+        const singleBudget = {};
+        if (d.budgets[platform]) singleBudget[platform] = d.budgets[platform];
+        renderBudgets(budgetId, singleBudget, d.channel_stats);
+      }
+
+      function platform2short(p) {
+        return { facebook: "fb", google: "gg", tiktok: "tt" }[p] || p;
+      }
+
+      // ── CHANNEL TABLE ─────────────────────────────────────────────────
+      function renderChannelTable(tableId, ch, budgets) {
         const rows = {
-          facebook: { icon: "f", bg: "#1877F2", name: "Facebook" },
-          google: { icon: "G", bg: "#EA4335", name: "Google" },
-          tiktok: { icon: "T", bg: "#555", name: "TikTok" },
+          facebook: { icon: "f", bg: "var(--fb)", name: "Facebook" },
+          google: { icon: "G", bg: "var(--gg)", name: "Google" },
+          tiktok: { icon: "T", bg: "var(--tt)", name: "TikTok" },
         };
         let html =
           "<thead><tr><th>Kênh</th><th>Chi phí</th><th>ROAS</th><th>CTR</th><th>Trạng thái</th></tr></thead><tbody>";
         for (const [k, r] of Object.entries(rows)) {
           const s = ch[k];
-          const budget = budgets[k] || 0;
+          if (!s) continue;
+          const budget = budgets?.[k] || 0;
           const pct = budget ? Math.round((s.spend / budget) * 100) : 0;
           const color =
             pct >= 85
@@ -1034,53 +2064,64 @@
               : s.roas >= 3
                 ? "var(--warn)"
                 : "var(--danger)";
+          const srcBadge = s.is_mock
+            ? '<span class="badge b-warn" style="font-size:9.5px">Demo</span>'
+            : '<span class="badge b-ok" style="font-size:9.5px">Live</span>';
           html += `<tr>
-            <td><div class="ch-name"><div class="ch-icon" style="background:${r.bg}">${r.icon}</div>${r.name}</div>
-              ${budget ? `<div class="prog"><div class="prog-fill" style="width:${Math.min(pct, 100)}%;background:${color}"></div></div>` : ""}
-            </td>
-            <td><span style="font-family:'JetBrains Mono',monospace">${fmtM(s.spend)}</span>${budget ? `<br><span style="font-size:11px;color:${color}">${pct}% NS</span>` : ""}</td>
-            <td style="font-family:'JetBrains Mono',monospace;color:${rcolor}">${s.roas}x</td>
-            <td style="color:var(--text2)">${s.ctr}%</td>
-            <td>${badge}</td>
-          </tr>`;
+      <td>
+        <div class="ch-name">
+          <div class="ch-icon" style="background:${r.bg}">${r.icon}</div>
+          <div>${r.name} ${srcBadge}</div>
+        </div>
+        ${budget ? `<div class="prog"><div class="prog-fill" style="width:${Math.min(pct, 100)}%;background:${color}"></div></div>` : ""}
+      </td>
+      <td>
+        <span class="mono">${fmtM(s.spend)}</span>
+        ${budget ? `<br><span style="font-size:10.5px;color:${color}">${pct}% NS</span>` : ""}
+      </td>
+      <td class="mono" style="color:${rcolor}">${s.roas}x</td>
+      <td style="color:var(--text2)">${s.ctr}%</td>
+      <td>${badge}</td>
+    </tr>`;
         }
         html += "</tbody>";
-        document.getElementById("chTable").innerHTML = html;
+        document.getElementById(tableId).innerHTML = html;
       }
 
-      function renderROI(d) {
-        const ch = d.channel_stats;
+      // ── ROI BARS ──────────────────────────────────────────────────────
+      function renderROI(elId, ch) {
         const items = [
-          { lbl: "FB - Brand", roi: 388, color: "#1877F2" },
+          { lbl: "FB · Brand", roi: 388, color: "#1877F2" },
           {
-            lbl: "GG - Search",
-            roi: Math.round(ch.google.roas * 80),
+            lbl: "GG · Search",
+            roi: Math.round((ch.google?.roas || 3.5) * 80),
             color: "#EA4335",
           },
           {
             lbl: "TikTok",
-            roi: Math.round(ch.tiktok.roas * 72),
-            color: "#888",
+            roi: Math.round((ch.tiktok?.roas || 3.2) * 72),
+            color: "#69c9d0",
           },
-          { lbl: "FB - Retarget", roi: 231, color: "#42a5f5" },
-          { lbl: "GG - Display", roi: 162, color: "#ef9a9a" },
+          { lbl: "FB · Retarget", roi: 231, color: "#42a5f5" },
+          { lbl: "GG · Display", roi: 162, color: "#ef9a9a" },
         ].sort((a, b) => b.roi - a.roi);
         const max = items[0].roi;
-        document.getElementById("roiList").innerHTML = items
+        document.getElementById(elId).innerHTML = items
           .map(
             (i) => `
-          <div class="roi-row">
-            <div class="roi-lbl">${i.lbl}</div>
-            <div class="roi-wrap"><div class="roi-fill" style="width:${Math.round((i.roi / max) * 100)}%;background:${i.color}">${i.roi}%</div></div>
-            <div class="roi-val">${i.roi}%</div>
-          </div>`,
+    <div class="roi-row">
+      <div class="roi-lbl">${i.lbl}</div>
+      <div class="roi-wrap">
+        <div class="roi-fill" style="width:${Math.round((i.roi / max) * 100)}%;background:${i.color}">${i.roi}%</div>
+      </div>
+      <div class="roi-val">${i.roi}%</div>
+    </div>`,
           )
           .join("");
       }
 
-      function renderBudgets(d) {
-        const budgets = d.budgets || {};
-        const ch = d.channel_stats;
+      // ── BUDGETS ───────────────────────────────────────────────────────
+      function renderBudgets(elId, budgets, ch) {
         const names = {
           facebook: "Facebook Ads",
           google: "Google Ads",
@@ -1102,63 +2143,265 @@
                 ? "var(--warn)"
                 : "var(--ok)";
           html += `<div class="budget-item ${cls}">
-            <div class="bi-top"><span class="bi-name">${names[k] || k}</span><span style="color:${color};font-family:'JetBrains Mono',monospace;font-size:11px">${pct}% · ${fmtM(spend)} / ${fmtM(limit)}</span></div>
-            <div class="bi-prog"><div class="bi-fill" style="width:${Math.min(pct, 100)}%;background:${color}"></div></div>
-          </div>`;
+      <div class="bi-top">
+        <span class="bi-name">${names[k] || k}</span>
+        <span style="color:${color};font-family:'JetBrains Mono',monospace;font-size:11px">${pct}% · ${fmtM(spend)}/${fmtM(limit)}</span>
+      </div>
+      <div class="bi-prog"><div class="bi-fill" style="width:${Math.min(pct, 100)}%;background:${color}"></div></div>
+    </div>`;
         }
         if (totalLimit) {
           const tp = Math.round((totalSpend / totalLimit) * 100);
-          html += `<div style="margin-top:4px;padding:10px;background:rgba(30,136,229,0.07);border-radius:8px;border:1px solid rgba(30,136,229,0.15)">
-            <div style="font-size:11px;color:var(--text3);margin-bottom:4px">TỔNG NGÂN SÁCH</div>
-            <div style="display:flex;justify-content:space-between;font-size:12px">
-              <span>Đã chi: <strong style="color:var(--accent);font-family:'JetBrains Mono',monospace">${fmtM(totalSpend)}</strong></span>
-              <span>Còn lại: <strong style="color:var(--ok);font-family:'JetBrains Mono',monospace">${fmtM(totalLimit - totalSpend)}</strong></span>
-            </div>
-            <div class="bi-prog" style="margin-top:8px;height:6px"><div class="bi-fill" style="width:${tp}%;background:linear-gradient(90deg,var(--accent),var(--ok))"></div></div>
-          </div>`;
+          html += `<div style="margin-top:4px;padding:10px;background:rgba(33,150,243,.06);border-radius:8px;border:1px solid rgba(33,150,243,.15)">
+      <div style="font-size:10.5px;color:var(--text3);margin-bottom:4px">TỔNG NGÂN SÁCH</div>
+      <div style="display:flex;justify-content:space-between;font-size:12px">
+        <span>Đã chi: <strong style="color:var(--accent);font-family:'JetBrains Mono',monospace">${fmtM(totalSpend)}</strong></span>
+        <span>Còn lại: <strong style="color:var(--ok);font-family:'JetBrains Mono',monospace">${fmtM(totalLimit - totalSpend)}</strong></span>
+      </div>
+      <div class="bi-prog" style="margin-top:7px;height:5px"><div class="bi-fill" style="width:${tp}%;background:linear-gradient(90deg,var(--accent),var(--ok))"></div></div>
+    </div>`;
         }
-        document.getElementById("budgetList").innerHTML =
+        document.getElementById(elId).innerHTML =
           html ||
-          '<div style="color:var(--text3);font-size:13px;text-align:center;padding:20px">Chưa có ngân sách</div>';
+          '<div style="color:var(--text3);font-size:13px;text-align:center;padding:24px">Chưa có ngân sách</div>';
       }
 
-      function checkAlerts(d) {
-        const bar = document.getElementById("alertBar");
-        const budgets = d.budgets || {};
-        const ch = d.channel_stats;
-        const alerts = [];
+      // ── ALERTS ────────────────────────────────────────────────────────
+      function checkAlerts(budgets, ch) {
+        if (!budgets || !ch) return;
         const names = {
           facebook: "Facebook Ads",
           google: "Google Ads",
           tiktok: "TikTok Ads",
         };
+        const alerts = [];
         for (const [k, limit] of Object.entries(budgets)) {
           const pct = Math.round(((ch[k]?.spend || 0) / limit) * 100);
           if (pct >= 80)
             alerts.push(
-              `<strong>${names[k]}</strong> đã dùng <strong>${pct}%</strong> ngân sách tháng`,
+              `<strong>${names[k]}</strong> đã dùng <strong>${pct}%</strong> ngân sách`,
             );
         }
+        const bar = document.getElementById("alertBar");
         if (alerts.length) {
-          bar.style.display = "flex";
+          bar.classList.add("show");
           document.getElementById("alertText").innerHTML =
             "⚠ CẢNH BÁO: " + alerts.join(" — ");
-        } else bar.style.display = "none";
+        } else {
+          bar.classList.remove("show");
+        }
       }
 
+      // ── CHART HELPER ──────────────────────────────────────────────────
+      function chartOptions({ stacked = false, labelFn = null } = {}) {
+        return {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: { callbacks: { label: labelFn || ((c) => `${c.raw}M`) } },
+          },
+          scales: {
+            x: {
+              grid: { color: "rgba(255,255,255,.03)" },
+              ticks: { color: "#4a5a72", font: { size: 10 } },
+              stacked,
+            },
+            y: {
+              grid: { color: "rgba(255,255,255,.03)" },
+              ticks: {
+                color: "#4a5a72",
+                font: { size: 10 },
+                callback: (v) => v + "M",
+              },
+              stacked,
+            },
+          },
+        };
+      }
+      function destroyChart(key) {
+        if (charts[key]) {
+          charts[key].destroy();
+          delete charts[key];
+        }
+      }
+
+      // ── SETTINGS ──────────────────────────────────────────────────────
+      async function loadSettings() {
+        await loadConnectionStatus();
+
+        const cfg = {
+          facebook: {
+            name: "Facebook Ads",
+            icon: "f",
+            bg: "var(--fb)",
+            authUrl: "/auth/facebook",
+            desc: "Kết nối tài khoản Facebook Business để theo dõi campaigns, ad sets và ads theo thời gian thực.",
+          },
+          google: {
+            name: "Google Ads",
+            icon: "G",
+            bg: "var(--gg)",
+            authUrl: "/auth/google",
+            desc: "Kết nối Google Ads để xem hiệu suất Search, Display, Shopping và YouTube campaigns.",
+          },
+          tiktok: {
+            name: "TikTok Ads",
+            icon: "T",
+            bg: "var(--tt)",
+            authUrl: "/auth/tiktok",
+            desc: "Kết nối TikTok Business Center để theo dõi In-Feed Ads, TopView và Brand Takeover.",
+          },
+        };
+
+        let html = "";
+        for (const [p, c] of Object.entries(cfg)) {
+          const conn = connections[p] || {};
+          const isConn = conn.connected;
+          const needsAuth = conn.needs_reauth;
+          const canConn = conn.can_connect;
+
+          let statusBadge = "";
+          let detailHtml = "";
+          let actionsHtml = "";
+          let cardClass = "";
+          let tokenBar = "";
+
+          if (isConn && !needsAuth) {
+            statusBadge =
+              '<span class="conn-status-badge csb-on"><span>●</span> Đã kết nối</span>';
+            detailHtml = `
+        <div><strong>${conn.account_name || "Tài khoản"}</strong></div>
+        <div style="color:var(--text3);font-size:11px;margin-top:2px">ID: ${conn.account_id || "—"}</div>
+        ${conn.days_left != null ? `<div style="font-size:11px;color:var(--text3);margin-top:2px">Token còn ${conn.days_left} ngày</div>` : ""}
+      `;
+            if (conn.days_left != null) {
+              const pct = Math.min(
+                Math.round((conn.days_left / 60) * 100),
+                100,
+              );
+              const color =
+                conn.days_left < 7
+                  ? "var(--danger)"
+                  : conn.days_left < 14
+                    ? "var(--warn)"
+                    : "var(--ok)";
+              tokenBar = `<div class="token-bar">
+          <div class="token-bar-label"><span>Hiệu lực token</span><span style="color:${color}">${conn.days_left} ngày</span></div>
+          <div class="token-bar-track"><div class="token-bar-fill" style="width:${pct}%;background:${color}"></div></div>
+        </div>`;
+            }
+            actionsHtml = `
+        <button class="btn-connect btn-connect-primary" onclick="reconnect('${p}','${c.authUrl}')">🔄 Làm mới token</button>
+        <button class="btn-connect btn-connect-secondary" onclick="disconnectPlatform('${p}')">Ngắt kết nối</button>
+      `;
+            cardClass = "connected";
+          } else if (isConn && needsAuth) {
+            statusBadge =
+              '<span class="conn-status-badge csb-warn"><span>⚠</span> Hết hạn</span>';
+            detailHtml = `<div style="color:var(--warn)">Token đã hết hạn. Vui lòng kết nối lại để tiếp tục nhận dữ liệu thực.</div>`;
+            actionsHtml = `<button class="btn-connect btn-connect-primary" onclick="reconnect('${p}','${c.authUrl}')">🔗 Kết nối lại</button>`;
+            cardClass = "needs-reauth";
+          } else if (canConn) {
+            statusBadge =
+              '<span class="conn-status-badge csb-off">Chưa kết nối</span>';
+            detailHtml = `<div style="color:var(--text3)">${c.desc}</div>`;
+            actionsHtml = `<button class="btn-connect btn-connect-primary" onclick="connectPlatform('${c.authUrl}')">🔗 Kết nối ${c.name}</button>`;
+          } else {
+            statusBadge =
+              '<span class="conn-status-badge csb-off">Chưa cấu hình</span>';
+            detailHtml = `
+        <div style="color:var(--text3)">${c.desc}</div>
+        <div style="margin-top:8px;padding:7px 10px;background:rgba(255,193,7,.06);border:1px solid rgba(255,193,7,.15);border-radius:7px;font-size:11px;color:var(--warn)">
+          Cần cấu hình credentials trong <span class="mono">.env</span> trước khi kết nối.
+        </div>`;
+            actionsHtml = `<button class="btn-connect btn-connect-disabled" disabled>Chưa sẵn sàng</button>`;
+          }
+
+          html += `
+      <div class="conn-card ${cardClass}">
+        <div class="conn-card-header">
+          <div class="conn-icon" style="background:${c.bg};${p === "tiktok" ? "color:#111" : ""}">${c.icon}</div>
+          <div>
+            <div class="conn-name">${c.name}</div>
+            <div class="conn-type">Advertising Platform</div>
+          </div>
+          ${statusBadge}
+        </div>
+        <div class="conn-detail">${detailHtml}</div>
+        ${tokenBar}
+        <div class="conn-actions">${actionsHtml}</div>
+      </div>`;
+        }
+
+        document.getElementById("settingsGrid").innerHTML = html;
+      }
+
+      function connectPlatform(url) {
+        window.location.href = url;
+      }
+      function reconnect(platform, url) {
+        window.location.href = url;
+      }
+
+      async function disconnectPlatform(platform) {
+        if (!confirm(`Ngắt kết nối ${PLATFORM_META[platform].name}?`)) return;
+        try {
+          await fetch(`/api/disconnect/${platform}`, { method: "POST" });
+          showToast(`Đã ngắt kết nối ${PLATFORM_META[platform].name}`, "warn");
+          await loadSettings();
+          await loadConnectionStatus();
+        } catch (e) {
+          showToast("Lỗi: " + e.message, "danger");
+        }
+      }
+
+      // ── MODAL ACTIONS ─────────────────────────────────────────────────
+      function useFakeData() {
+        forceMock = true;
+        sessionStorage.setItem("dismissedModal", "1");
+        document.getElementById("noAdsOverlay").style.display = "none";
+        loadView(currentView);
+      }
+      function closeModal() {
+        sessionStorage.setItem("dismissedModal", "1");
+        document.getElementById("noAdsOverlay").style.display = "none";
+        // Show empty state
+        document.getElementById("metricsAll").innerHTML = `
+    <div class="metric m-blue"><div class="m-label">Tổng chi phí</div><div class="m-value" style="color:var(--text3)">—</div></div>
+    <div class="metric m-green"><div class="m-label">Doanh thu</div><div class="m-value" style="color:var(--text3)">—</div></div>
+    <div class="metric m-orange"><div class="m-label">ROAS</div><div class="m-value" style="color:var(--text3)">—</div></div>
+    <div class="metric m-yellow"><div class="m-label">ROI</div><div class="m-value" style="color:var(--text3)">—</div></div>
+    <div class="metric m-red"><div class="m-label">CPA</div><div class="m-value" style="color:var(--text3)">—</div></div>`;
+        ["compareCards", "chTableAll", "roiAll", "budgetAll"].forEach((id) => {
+          document.getElementById(id).innerHTML =
+            '<div class="empty-state"><div class="empty-icon">📡</div><div class="empty-title">Chưa có dữ liệu</div>Kết nối tài khoản ads để bắt đầu</div>';
+        });
+      }
+      function goSettings() {
+        sessionStorage.setItem("dismissedModal", "1");
+        document.getElementById("noAdsOverlay").style.display = "none";
+        switchView("settings");
+      }
+
+      // ── LOGOUT ────────────────────────────────────────────────────────
       async function logout() {
         await fetch("/api/logout", { method: "POST" });
         window.location.href = "/login";
       }
 
-      loadData(7);
-      setInterval(() => {
-        if (
-          !document.getElementById("noAdsModal").style.display ||
-          document.getElementById("noAdsModal").style.display === "none"
-        )
-          loadData(7);
-      }, 60000);
+      // ── BOOT ──────────────────────────────────────────────────────────
+      async function boot() {
+        await loadConnectionStatus();
+        switchView("all");
+
+        // Auto-refresh every 60s (only if not on settings)
+        setInterval(() => {
+          if (currentView !== "settings") loadView(currentView);
+        }, 60_000);
+      }
+
+      boot();
     </script>
   </body>
 </html>

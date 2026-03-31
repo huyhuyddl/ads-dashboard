@@ -1,0 +1,1164 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>AdsAnalytics Pro — Dashboard</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      :root {
+        --bg: #080f1e;
+        --bg2: #0d1829;
+        --bg3: #111f38;
+        --accent: #1e88e5;
+        --ok: #00c9a7;
+        --warn: #ffb800;
+        --danger: #ff4757;
+        --orange: #ff6b35;
+        --text: #e8edf5;
+        --text2: #8b9bb4;
+        --text3: #4a5a72;
+        --border: rgba(255, 255, 255, 0.07);
+        --card: rgba(255, 255, 255, 0.04);
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: "DM Sans", sans-serif;
+        min-height: 100vh;
+      }
+
+      /* SIDEBAR */
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 220px;
+        background: var(--bg2);
+        border-right: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        padding: 24px 16px;
+        z-index: 100;
+      }
+      .logo {
+        font-size: 17px;
+        font-weight: 600;
+        padding: 0 8px;
+        margin-bottom: 32px;
+        letter-spacing: -0.3px;
+      }
+      .logo span {
+        color: var(--accent);
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: 9px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 14px;
+        color: var(--text2);
+        margin-bottom: 2px;
+        text-decoration: none;
+      }
+      .nav-item:hover {
+        background: var(--card);
+        color: var(--text);
+      }
+      .nav-item.active {
+        background: rgba(30, 136, 229, 0.15);
+        color: var(--accent);
+      }
+      .nav-icon {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+      }
+      .sidebar-bottom {
+        margin-top: auto;
+      }
+      .user-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        background: rgba(30, 136, 229, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--accent);
+        flex-shrink: 0;
+      }
+      .user-name {
+        font-size: 13px;
+        font-weight: 500;
+      }
+      .user-role {
+        font-size: 11px;
+        color: var(--text3);
+      }
+      .logout-btn {
+        background: none;
+        border: none;
+        color: var(--text3);
+        cursor: pointer;
+        font-size: 12px;
+        margin-top: 8px;
+        width: 100%;
+        text-align: center;
+        padding: 4px;
+        border-radius: 6px;
+        font-family: "DM Sans", sans-serif;
+        transition: color 0.2s;
+      }
+      .logout-btn:hover {
+        color: var(--danger);
+      }
+
+      /* MAIN */
+      .main {
+        margin-left: 220px;
+        padding: 24px 28px;
+        min-height: 100vh;
+      }
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+      }
+      .page-title {
+        font-size: 20px;
+        font-weight: 600;
+        letter-spacing: -0.3px;
+      }
+      .live-badge {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: var(--ok);
+        background: rgba(0, 201, 167, 0.1);
+        border: 1px solid rgba(0, 201, 167, 0.2);
+        padding: 5px 12px;
+        border-radius: 20px;
+      }
+      .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--ok);
+        animation: pulse 1.5s infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.3;
+        }
+      }
+      .date-btns {
+        display: flex;
+        gap: 4px;
+      }
+      .date-btn {
+        background: var(--card);
+        border: 1px solid var(--border);
+        color: var(--text2);
+        padding: 6px 14px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 12px;
+        font-family: "DM Sans", sans-serif;
+        transition: all 0.2s;
+      }
+      .date-btn.active,
+      .date-btn:hover {
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent);
+      }
+
+      /* ALERT */
+      .alert {
+        background: rgba(255, 71, 87, 0.08);
+        border: 1px solid rgba(255, 71, 87, 0.25);
+        border-radius: 10px;
+        padding: 12px 16px;
+        margin-bottom: 20px;
+        display: none;
+        align-items: center;
+        gap: 12px;
+        animation: alertPulse 2.5s infinite;
+      }
+      @keyframes alertPulse {
+        0%,
+        100% {
+          border-color: rgba(255, 71, 87, 0.25);
+        }
+        50% {
+          border-color: rgba(255, 71, 87, 0.5);
+        }
+      }
+      .alert-text {
+        font-size: 13px;
+        color: #ff8a95;
+      }
+
+      /* DEMO BANNER */
+      .demo-banner {
+        background: rgba(255, 184, 0, 0.07);
+        border: 1px solid rgba(255, 184, 0, 0.25);
+        border-radius: 10px;
+        padding: 10px 16px;
+        margin-bottom: 20px;
+        display: none;
+        align-items: center;
+        gap: 10px;
+        font-size: 13px;
+      }
+      .demo-banner-icon {
+        font-size: 16px;
+      }
+      .demo-banner-text {
+        color: #ffd54f;
+      }
+
+      /* METRICS */
+      .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+      .metric {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px;
+        position: relative;
+        overflow: hidden;
+      }
+      .metric::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        border-radius: 12px 12px 0 0;
+      }
+      .m-blue::before {
+        background: var(--accent);
+      }
+      .m-green::before {
+        background: var(--ok);
+      }
+      .m-orange::before {
+        background: var(--orange);
+      }
+      .m-yellow::before {
+        background: var(--warn);
+      }
+      .m-red::before {
+        background: var(--danger);
+      }
+      .m-label {
+        font-size: 11px;
+        color: var(--text2);
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        margin-bottom: 8px;
+      }
+      .m-value {
+        font-size: 22px;
+        font-weight: 600;
+        font-family: "JetBrains Mono", monospace;
+        letter-spacing: -0.5px;
+      }
+      .m-sub {
+        font-size: 12px;
+        margin-top: 5px;
+        color: var(--text3);
+      }
+      .up {
+        color: var(--ok);
+      }
+
+      /* GRID */
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 320px;
+        gap: 16px;
+        margin-bottom: 16px;
+      }
+      .grid-2b {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      .chart-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 18px;
+      }
+      .card-title {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text2);
+        margin-bottom: 14px;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      /* TABLE */
+      .ch-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .ch-table th {
+        font-size: 11px;
+        color: var(--text3);
+        padding: 6px 8px;
+        border-bottom: 1px solid var(--border);
+        text-align: left;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .ch-table td {
+        padding: 10px 8px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        font-size: 13px;
+      }
+      .ch-table tr:last-child td {
+        border-bottom: none;
+      }
+      .ch-name {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .ch-icon {
+        width: 24px;
+        height: 24px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 700;
+        color: #fff;
+      }
+      .badge {
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 500;
+      }
+      .b-ok {
+        background: rgba(0, 201, 167, 0.15);
+        color: var(--ok);
+      }
+      .b-warn {
+        background: rgba(255, 184, 0, 0.15);
+        color: var(--warn);
+      }
+      .b-danger {
+        background: rgba(255, 71, 87, 0.15);
+        color: var(--danger);
+      }
+      .prog {
+        height: 4px;
+        background: rgba(255, 255, 255, 0.07);
+        border-radius: 2px;
+        margin-top: 4px;
+      }
+      .prog-fill {
+        height: 100%;
+        border-radius: 2px;
+      }
+
+      /* BUDGET */
+      .budget-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .budget-item {
+        padding: 10px 12px;
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: 8px;
+        border-left: 3px solid;
+      }
+      .bi-ok {
+        border-color: var(--ok);
+      }
+      .bi-warn {
+        border-color: var(--warn);
+      }
+      .bi-danger {
+        border-color: var(--danger);
+      }
+      .bi-top {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        margin-bottom: 6px;
+      }
+      .bi-name {
+        font-weight: 500;
+      }
+      .bi-prog {
+        height: 5px;
+        background: rgba(255, 255, 255, 0.07);
+        border-radius: 3px;
+      }
+      .bi-fill {
+        height: 100%;
+        border-radius: 3px;
+      }
+
+      /* ROI */
+      .roi-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .roi-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 12px;
+      }
+      .roi-lbl {
+        width: 90px;
+        color: var(--text2);
+        flex-shrink: 0;
+      }
+      .roi-wrap {
+        flex: 1;
+        height: 22px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      .roi-fill {
+        height: 100%;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        padding: 0 8px;
+        font-size: 11px;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.9);
+      }
+      .roi-val {
+        width: 50px;
+        text-align: right;
+        font-family: "JetBrains Mono", monospace;
+        color: var(--text);
+      }
+      .spinner {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        border-top-color: var(--accent);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .loading-overlay {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 200px;
+        color: var(--text3);
+        gap: 12px;
+      }
+
+      /* ── NO-ADS MODAL ──────────────────────────────────────────── */
+      .noads-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 999;
+        backdrop-filter: blur(4px);
+      }
+      .noads-modal {
+        background: var(--bg2);
+        border: 1px solid rgba(30, 136, 229, 0.2);
+        border-radius: 20px;
+        padding: 36px 40px;
+        width: 100%;
+        max-width: 460px;
+        text-align: center;
+        animation: modalUp 0.35s ease;
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+      }
+      @keyframes modalUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .noads-icon {
+        font-size: 48px;
+        margin-bottom: 18px;
+      }
+      .noads-title {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+      .noads-sub {
+        font-size: 14px;
+        color: var(--text2);
+        line-height: 1.6;
+        margin-bottom: 28px;
+      }
+      .noads-sub strong {
+        color: var(--text);
+      }
+      .noads-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .noads-btn {
+        padding: 13px 20px;
+        border-radius: 10px;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        font-family: "DM Sans", sans-serif;
+        transition: all 0.2s;
+      }
+      .noads-btn-primary {
+        background: var(--accent);
+        color: #fff;
+      }
+      .noads-btn-primary:hover {
+        background: #1976d2;
+        transform: translateY(-1px);
+      }
+      .noads-btn-secondary {
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text2);
+        border: 1px solid var(--border);
+      }
+      .noads-btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--text);
+      }
+      .noads-features {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 28px;
+      }
+      .noads-feature {
+        flex: 1;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 12px 10px;
+        font-size: 12px;
+      }
+      .noads-feature-icon {
+        font-size: 20px;
+        margin-bottom: 6px;
+      }
+      .noads-feature-label {
+        color: var(--text2);
+      }
+      .noads-note {
+        font-size: 11px;
+        color: var(--text3);
+        margin-top: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="sidebar">
+      <div class="logo">Ads<span>Analytics</span></div>
+      <a class="nav-item active" href="/dashboard">
+        <svg
+          class="nav-icon"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <rect x="3" y="3" width="7" height="7" rx="1" stroke-width="2" />
+          <rect x="14" y="3" width="7" height="7" rx="1" stroke-width="2" />
+          <rect x="3" y="14" width="7" height="7" rx="1" stroke-width="2" />
+          <rect x="14" y="14" width="7" height="7" rx="1" stroke-width="2" />
+        </svg>
+        Dashboard
+      </a>
+      <a class="nav-item" href="#">
+        <svg
+          class="nav-icon"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <polyline
+            points="22 12 18 12 15 21 9 3 6 12 2 12"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+        </svg>
+        Chiến dịch
+      </a>
+      <a class="nav-item" href="#">
+        <svg
+          class="nav-icon"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <circle cx="12" cy="12" r="9" stroke-width="2" />
+          <path d="M12 8v4l3 3" stroke-width="2" stroke-linecap="round" />
+        </svg>
+        Lịch sử
+      </a>
+      <div class="sidebar-bottom">
+        <div class="user-card">
+          <div class="avatar" id="avatarBox">?</div>
+          <div>
+            <div class="user-name" id="usernameBox">{{ username }}</div>
+            <div class="user-role" id="roleBox">{{ role }}</div>
+          </div>
+        </div>
+        <button class="logout-btn" onclick="logout()">Đăng xuất</button>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="topbar">
+        <div>
+          <div class="page-title">Marketing Dashboard</div>
+          <div style="font-size: 12px; color: var(--text3); margin-top: 3px">
+            Xin chào, <span style="color: var(--text2)">{{ username }}</span> —
+            <span id="clock">--:--:--</span>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px">
+          <div class="date-btns">
+            <button class="date-btn active" onclick="loadData(7, this)">
+              7 ngày
+            </button>
+            <button class="date-btn" onclick="loadData(30, this)">
+              30 ngày
+            </button>
+            <button class="date-btn" onclick="loadData(90, this)">
+              90 ngày
+            </button>
+          </div>
+          <div class="live-badge">
+            <div class="dot"></div>
+            LIVE
+          </div>
+        </div>
+      </div>
+
+      <!-- Demo mode banner -->
+      <div class="demo-banner" id="demoBanner">
+        <span class="demo-banner-icon">🎭</span>
+        <div class="demo-banner-text">
+          Đang xem <strong>dữ liệu minh họa</strong> — kết nối tài khoản ads để
+          xem số liệu thực tế
+        </div>
+        <button
+          onclick="connectAds()"
+          style="
+            margin-left: auto;
+            background: rgba(255, 184, 0, 0.15);
+            border: 1px solid rgba(255, 184, 0, 0.3);
+            color: var(--warn);
+            padding: 5px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-family: &quot;DM Sans&quot;, sans-serif;
+          "
+        >
+          Kết nối ngay
+        </button>
+      </div>
+
+      <div class="alert" id="alertBar">
+        <span style="font-size: 16px">⚠</span>
+        <div class="alert-text" id="alertText"></div>
+      </div>
+
+      <div class="metrics-grid" id="metricsGrid">
+        <div class="metric m-blue">
+          <div class="m-label">Tổng chi phí</div>
+          <div class="loading-overlay"><div class="spinner"></div></div>
+        </div>
+        <div class="metric m-green"></div>
+        <div class="metric m-orange"></div>
+        <div class="metric m-yellow"></div>
+        <div class="metric m-red"></div>
+      </div>
+
+      <div class="grid-2">
+        <div class="chart-card">
+          <div class="card-title">
+            Chi phí theo ngày
+            <span style="font-size: 11px; color: var(--text3)"
+              >đơn vị: triệu đồng</span
+            >
+          </div>
+          <div style="position: relative; height: 220px">
+            <canvas id="spendChart"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="card-title">Hiệu suất theo kênh</div>
+          <table class="ch-table" id="chTable">
+            <tbody>
+              <tr>
+                <td colspan="4">
+                  <div class="loading-overlay"><div class="spinner"></div></div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="grid-2b">
+        <div class="chart-card">
+          <div class="card-title">ROI theo kênh</div>
+          <div class="roi-list" id="roiList">
+            <div class="loading-overlay"><div class="spinner"></div></div>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="card-title">Ngân sách tháng</div>
+          <div class="budget-list" id="budgetList">
+            <div class="loading-overlay"><div class="spinner"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── NO ADS MODAL ─────────────────────────────────────────────── -->
+    <div class="noads-overlay" id="noAdsModal" style="display: none">
+      <div class="noads-modal">
+        <div class="noads-icon">📊</div>
+        <div class="noads-title">Chưa có dữ liệu quảng cáo</div>
+        <div class="noads-sub">
+          Tài khoản <strong>{{ username }}</strong> chưa kết nối với nền tảng
+          ads nào.<br />
+          Bạn muốn làm gì tiếp theo?
+        </div>
+        <div class="noads-features">
+          <div class="noads-feature">
+            <div class="noads-feature-icon">🎭</div>
+            <div style="font-weight: 500; margin-bottom: 4px; font-size: 13px">
+              Xem minh họa
+            </div>
+            <div class="noads-feature-label">Dữ liệu mẫu chuyên nghiệp</div>
+          </div>
+          <div class="noads-feature">
+            <div class="noads-feature-icon">📈</div>
+            <div style="font-weight: 500; margin-bottom: 4px; font-size: 13px">
+              Đầy đủ biểu đồ
+            </div>
+            <div class="noads-feature-label">Charts, ROI, ngân sách</div>
+          </div>
+          <div class="noads-feature">
+            <div class="noads-feature-icon">🔗</div>
+            <div style="font-weight: 500; margin-bottom: 4px; font-size: 13px">
+              Kết nối sau
+            </div>
+            <div class="noads-feature-label">Dễ dàng nâng cấp</div>
+          </div>
+        </div>
+        <div class="noads-actions">
+          <button class="noads-btn noads-btn-primary" onclick="useFakeData()">
+            🎭 Xem hình ảnh minh họa
+          </button>
+          <button class="noads-btn noads-btn-secondary" onclick="connectAds()">
+            🔗 Kết nối tài khoản ads
+          </button>
+          <button
+            class="noads-btn noads-btn-secondary"
+            onclick="continueEmpty()"
+          >
+            Tiếp tục không có dữ liệu
+          </button>
+        </div>
+        <div class="noads-note">
+          Dữ liệu minh họa chỉ dùng cho mục đích xem trước, không phản ánh số
+          liệu thực tế
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const username = "{{ username }}";
+      const role = "{{ role }}";
+      document.getElementById("avatarBox").textContent = username
+        .charAt(0)
+        .toUpperCase();
+      document.getElementById("usernameBox").textContent = username;
+      document.getElementById("roleBox").textContent = role;
+
+      setInterval(() => {
+        document.getElementById("clock").textContent =
+          new Date().toLocaleTimeString("vi-VN");
+      }, 1000);
+      document.getElementById("clock").textContent =
+        new Date().toLocaleTimeString("vi-VN");
+
+      let spendChart = null;
+      let usingFakeData = false;
+
+      function fmt(n) {
+        return new Intl.NumberFormat("vi-VN").format(Math.round(n));
+      }
+      function fmtM(n) {
+        return (n / 1000000).toFixed(1) + "M";
+      }
+
+      async function loadData(days = 7, btn = null) {
+        if (btn) {
+          document
+            .querySelectorAll(".date-btn")
+            .forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+        }
+        const res = await fetch(`/api/dashboard-data?days=${days}`);
+        const d = await res.json();
+
+        // Check if user has no real ads data
+        if (d.no_ads_data && !usingFakeData) {
+          document.getElementById("noAdsModal").style.display = "flex";
+          window._pendingDays = days;
+          return;
+        }
+
+        renderAll(d);
+      }
+
+      function renderAll(d) {
+        renderMetrics(d);
+        renderChart(d);
+        renderChannels(d);
+        renderROI(d);
+        renderBudgets(d);
+        checkAlerts(d);
+        // Show demo banner if using fake data
+        if (d.source === "mock" || usingFakeData) {
+          document.getElementById("demoBanner").style.display = "flex";
+        }
+      }
+
+      // ── Modal actions ────────────────────────────────────────────────
+      function useFakeData() {
+        usingFakeData = true;
+        document.getElementById("noAdsModal").style.display = "none";
+        // Fetch with force_mock flag
+        const days = window._pendingDays || 7;
+        fetch(`/api/dashboard-data?days=${days}&force_mock=1`)
+          .then((r) => r.json())
+          .then((d) => renderAll(d));
+      }
+
+      function continueEmpty() {
+        document.getElementById("noAdsModal").style.display = "none";
+        // Show empty state
+        document.getElementById("metricsGrid").innerHTML = `
+          <div class="metric m-blue"><div class="m-label">Tổng chi phí</div><div style="color:var(--text3);font-size:22px;font-weight:600;font-family:'JetBrains Mono',monospace;margin-top:8px">—</div></div>
+          <div class="metric m-green"><div class="m-label">Doanh thu</div><div style="color:var(--text3);font-size:22px;font-weight:600;font-family:'JetBrains Mono',monospace;margin-top:8px">—</div></div>
+          <div class="metric m-orange"><div class="m-label">ROAS</div><div style="color:var(--text3);font-size:22px;font-weight:600;font-family:'JetBrains Mono',monospace;margin-top:8px">—</div></div>
+          <div class="metric m-yellow"><div class="m-label">ROI</div><div style="color:var(--text3);font-size:22px;font-weight:600;font-family:'JetBrains Mono',monospace;margin-top:8px">—</div></div>
+          <div class="metric m-red"><div class="m-label">CPA</div><div style="color:var(--text3);font-size:22px;font-weight:600;font-family:'JetBrains Mono',monospace;margin-top:8px">—</div></div>`;
+        document.getElementById("roiList").innerHTML =
+          '<div style="color:var(--text3);font-size:13px;text-align:center;padding:30px">Chưa có dữ liệu</div>';
+        document.getElementById("budgetList").innerHTML =
+          '<div style="color:var(--text3);font-size:13px;text-align:center;padding:30px">Chưa có ngân sách</div>';
+        document.getElementById("chTable").innerHTML =
+          '<tbody><tr><td colspan="5" style="text-align:center;color:var(--text3);padding:30px">Chưa có dữ liệu</td></tr></tbody>';
+      }
+
+      function connectAds() {
+        document.getElementById("noAdsModal").style.display = "none";
+        // Placeholder: redirect to settings or show connect flow
+        alert(
+          "Tính năng kết nối tài khoản ads đang được phát triển.\nVui lòng liên hệ admin để được hỗ trợ.",
+        );
+      }
+
+      // ── Render functions ─────────────────────────────────────────────
+      function renderMetrics(d) {
+        document.getElementById("metricsGrid").innerHTML = `
+          <div class="metric m-blue"><div class="m-label">Tổng chi phí</div><div class="m-value" style="color:var(--accent)">${fmtM(d.total_spend)}</div><div class="m-sub up">↑ 12.3% so tháng trước</div></div>
+          <div class="metric m-green"><div class="m-label">Doanh thu (ước)</div><div class="m-value" style="color:var(--ok)">${fmtM(d.total_revenue)}</div><div class="m-sub up">↑ 18.7% vs tháng trước</div></div>
+          <div class="metric m-orange"><div class="m-label">ROAS trung bình</div><div class="m-value" style="color:#FF6B35">${d.roas}x</div><div class="m-sub" style="color:var(--text3)">Mục tiêu: 4.0x</div></div>
+          <div class="metric m-yellow"><div class="m-label">ROI tổng</div><div class="m-value" style="color:var(--warn)">${d.roi}%</div><div class="m-sub up">↑ 6.4% kỳ trước</div></div>
+          <div class="metric m-red"><div class="m-label">CPA trung bình</div><div class="m-value" style="color:var(--danger)">${fmt(d.cpa)}đ</div><div class="m-sub" style="color:var(--text3)">Mục tiêu: 120,000đ</div></div>`;
+      }
+
+      function renderChart(d) {
+        const ctx = document.getElementById("spendChart").getContext("2d");
+        if (spendChart) spendChart.destroy();
+        spendChart = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: d.labels,
+            datasets: [
+              {
+                label: "Facebook",
+                data: d.spend_series.facebook,
+                backgroundColor: "rgba(24,119,242,0.75)",
+                borderRadius: 4,
+                stack: "s",
+              },
+              {
+                label: "Google",
+                data: d.spend_series.google,
+                backgroundColor: "rgba(234,67,53,0.75)",
+                borderRadius: 4,
+                stack: "s",
+              },
+              {
+                label: "TikTok",
+                data: d.spend_series.tiktok,
+                backgroundColor: "rgba(160,160,160,0.6)",
+                borderRadius: 4,
+                stack: "s",
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: { label: (c) => `${c.dataset.label}: ${c.raw}M` },
+              },
+            },
+            scales: {
+              x: {
+                grid: { color: "rgba(255,255,255,0.04)" },
+                ticks: { color: "#5A6A82", font: { size: 11 } },
+                stacked: true,
+              },
+              y: {
+                grid: { color: "rgba(255,255,255,0.04)" },
+                ticks: {
+                  color: "#5A6A82",
+                  font: { size: 11 },
+                  callback: (v) => v + "M",
+                },
+                stacked: true,
+              },
+            },
+          },
+        });
+      }
+
+      function renderChannels(d) {
+        const ch = d.channel_stats;
+        const budgets = d.budgets || {};
+        const rows = {
+          facebook: { icon: "f", bg: "#1877F2", name: "Facebook" },
+          google: { icon: "G", bg: "#EA4335", name: "Google" },
+          tiktok: { icon: "T", bg: "#555", name: "TikTok" },
+        };
+        let html =
+          "<thead><tr><th>Kênh</th><th>Chi phí</th><th>ROAS</th><th>CTR</th><th>Trạng thái</th></tr></thead><tbody>";
+        for (const [k, r] of Object.entries(rows)) {
+          const s = ch[k];
+          const budget = budgets[k] || 0;
+          const pct = budget ? Math.round((s.spend / budget) * 100) : 0;
+          const color =
+            pct >= 85
+              ? "var(--danger)"
+              : pct >= 70
+                ? "var(--warn)"
+                : "var(--ok)";
+          const badge =
+            pct >= 85
+              ? '<span class="badge b-danger">Vượt mức</span>'
+              : pct >= 70
+                ? '<span class="badge b-warn">Chú ý</span>'
+                : '<span class="badge b-ok">Tốt</span>';
+          const rcolor =
+            s.roas >= 4
+              ? "var(--ok)"
+              : s.roas >= 3
+                ? "var(--warn)"
+                : "var(--danger)";
+          html += `<tr>
+            <td><div class="ch-name"><div class="ch-icon" style="background:${r.bg}">${r.icon}</div>${r.name}</div>
+              ${budget ? `<div class="prog"><div class="prog-fill" style="width:${Math.min(pct, 100)}%;background:${color}"></div></div>` : ""}
+            </td>
+            <td><span style="font-family:'JetBrains Mono',monospace">${fmtM(s.spend)}</span>${budget ? `<br><span style="font-size:11px;color:${color}">${pct}% NS</span>` : ""}</td>
+            <td style="font-family:'JetBrains Mono',monospace;color:${rcolor}">${s.roas}x</td>
+            <td style="color:var(--text2)">${s.ctr}%</td>
+            <td>${badge}</td>
+          </tr>`;
+        }
+        html += "</tbody>";
+        document.getElementById("chTable").innerHTML = html;
+      }
+
+      function renderROI(d) {
+        const ch = d.channel_stats;
+        const items = [
+          { lbl: "FB - Brand", roi: 388, color: "#1877F2" },
+          {
+            lbl: "GG - Search",
+            roi: Math.round(ch.google.roas * 80),
+            color: "#EA4335",
+          },
+          {
+            lbl: "TikTok",
+            roi: Math.round(ch.tiktok.roas * 72),
+            color: "#888",
+          },
+          { lbl: "FB - Retarget", roi: 231, color: "#42a5f5" },
+          { lbl: "GG - Display", roi: 162, color: "#ef9a9a" },
+        ].sort((a, b) => b.roi - a.roi);
+        const max = items[0].roi;
+        document.getElementById("roiList").innerHTML = items
+          .map(
+            (i) => `
+          <div class="roi-row">
+            <div class="roi-lbl">${i.lbl}</div>
+            <div class="roi-wrap"><div class="roi-fill" style="width:${Math.round((i.roi / max) * 100)}%;background:${i.color}">${i.roi}%</div></div>
+            <div class="roi-val">${i.roi}%</div>
+          </div>`,
+          )
+          .join("");
+      }
+
+      function renderBudgets(d) {
+        const budgets = d.budgets || {};
+        const ch = d.channel_stats;
+        const names = {
+          facebook: "Facebook Ads",
+          google: "Google Ads",
+          tiktok: "TikTok Ads",
+        };
+        let html = "";
+        let totalLimit = 0,
+          totalSpend = 0;
+        for (const [k, limit] of Object.entries(budgets)) {
+          const spend = ch[k]?.spend || 0;
+          const pct = Math.round((spend / limit) * 100);
+          totalLimit += limit;
+          totalSpend += spend;
+          const cls = pct >= 85 ? "bi-danger" : pct >= 70 ? "bi-warn" : "bi-ok";
+          const color =
+            pct >= 85
+              ? "var(--danger)"
+              : pct >= 70
+                ? "var(--warn)"
+                : "var(--ok)";
+          html += `<div class="budget-item ${cls}">
+            <div class="bi-top"><span class="bi-name">${names[k] || k}</span><span style="color:${color};font-family:'JetBrains Mono',monospace;font-size:11px">${pct}% · ${fmtM(spend)} / ${fmtM(limit)}</span></div>
+            <div class="bi-prog"><div class="bi-fill" style="width:${Math.min(pct, 100)}%;background:${color}"></div></div>
+          </div>`;
+        }
+        if (totalLimit) {
+          const tp = Math.round((totalSpend / totalLimit) * 100);
+          html += `<div style="margin-top:4px;padding:10px;background:rgba(30,136,229,0.07);border-radius:8px;border:1px solid rgba(30,136,229,0.15)">
+            <div style="font-size:11px;color:var(--text3);margin-bottom:4px">TỔNG NGÂN SÁCH</div>
+            <div style="display:flex;justify-content:space-between;font-size:12px">
+              <span>Đã chi: <strong style="color:var(--accent);font-family:'JetBrains Mono',monospace">${fmtM(totalSpend)}</strong></span>
+              <span>Còn lại: <strong style="color:var(--ok);font-family:'JetBrains Mono',monospace">${fmtM(totalLimit - totalSpend)}</strong></span>
+            </div>
+            <div class="bi-prog" style="margin-top:8px;height:6px"><div class="bi-fill" style="width:${tp}%;background:linear-gradient(90deg,var(--accent),var(--ok))"></div></div>
+          </div>`;
+        }
+        document.getElementById("budgetList").innerHTML =
+          html ||
+          '<div style="color:var(--text3);font-size:13px;text-align:center;padding:20px">Chưa có ngân sách</div>';
+      }
+
+      function checkAlerts(d) {
+        const bar = document.getElementById("alertBar");
+        const budgets = d.budgets || {};
+        const ch = d.channel_stats;
+        const alerts = [];
+        const names = {
+          facebook: "Facebook Ads",
+          google: "Google Ads",
+          tiktok: "TikTok Ads",
+        };
+        for (const [k, limit] of Object.entries(budgets)) {
+          const pct = Math.round(((ch[k]?.spend || 0) / limit) * 100);
+          if (pct >= 80)
+            alerts.push(
+              `<strong>${names[k]}</strong> đã dùng <strong>${pct}%</strong> ngân sách tháng`,
+            );
+        }
+        if (alerts.length) {
+          bar.style.display = "flex";
+          document.getElementById("alertText").innerHTML =
+            "⚠ CẢNH BÁO: " + alerts.join(" — ");
+        } else bar.style.display = "none";
+      }
+
+      async function logout() {
+        await fetch("/api/logout", { method: "POST" });
+        window.location.href = "/login";
+      }
+
+      loadData(7);
+      setInterval(() => {
+        if (
+          !document.getElementById("noAdsModal").style.display ||
+          document.getElementById("noAdsModal").style.display === "none"
+        )
+          loadData(7);
+      }, 60000);
+    </script>
+  </body>
+</html>

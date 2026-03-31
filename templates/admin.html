@@ -1,0 +1,1702 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>AdsAnalytics Pro — Admin</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      :root {
+        --bg: #080f1e;
+        --bg2: #0d1829;
+        --bg3: #111f38;
+        --accent: #1e88e5;
+        --ok: #00c9a7;
+        --warn: #ffb800;
+        --danger: #ff4757;
+        --orange: #ff6b35;
+        --text: #e8edf5;
+        --text2: #8b9bb4;
+        --text3: #4a5a72;
+        --border: rgba(255, 255, 255, 0.07);
+        --card: rgba(255, 255, 255, 0.04);
+        --fb: #1877f2;
+        --gg: #ea4335;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: "DM Sans", sans-serif;
+        min-height: 100vh;
+      }
+
+      /* SIDEBAR */
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 220px;
+        background: var(--bg2);
+        border-right: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        padding: 24px 16px;
+        z-index: 100;
+      }
+      .logo {
+        font-size: 17px;
+        font-weight: 600;
+        padding: 0 8px;
+        margin-bottom: 32px;
+        letter-spacing: -0.3px;
+      }
+      .logo span {
+        color: var(--accent);
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: 9px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 14px;
+        color: var(--text2);
+        margin-bottom: 2px;
+        text-decoration: none;
+        border: none;
+        background: none;
+        width: 100%;
+        font-family: "DM Sans", sans-serif;
+      }
+      .nav-item:hover,
+      .nav-item.active {
+        background: rgba(30, 136, 229, 0.15);
+        color: var(--accent);
+      }
+      .sidebar-bottom {
+        margin-top: auto;
+      }
+      .admin-badge {
+        background: rgba(30, 136, 229, 0.15);
+        border: 1px solid rgba(30, 136, 229, 0.3);
+        border-radius: 8px;
+        padding: 10px 12px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .ab-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--accent);
+      }
+      .ab-text {
+        font-size: 13px;
+        font-weight: 500;
+      }
+      .ab-sub {
+        font-size: 11px;
+        color: var(--text3);
+      }
+      .logout-btn {
+        background: none;
+        border: none;
+        color: var(--text3);
+        cursor: pointer;
+        font-size: 12px;
+        width: 100%;
+        text-align: center;
+        padding: 6px;
+        border-radius: 6px;
+        font-family: "DM Sans", sans-serif;
+        transition: color 0.2s;
+      }
+      .logout-btn:hover {
+        color: var(--danger);
+      }
+
+      /* MAIN */
+      .main {
+        margin-left: 220px;
+        padding: 24px 28px;
+      }
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+      }
+      .page-title {
+        font-size: 20px;
+        font-weight: 600;
+        letter-spacing: -0.3px;
+      }
+
+      /* VIEWS */
+      .view {
+        display: none;
+      }
+      .view.active {
+        display: block;
+      }
+
+      /* STATS */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin-bottom: 24px;
+      }
+      .stat {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px;
+      }
+      .stat-label {
+        font-size: 11px;
+        color: var(--text2);
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        margin-bottom: 8px;
+      }
+      .stat-value {
+        font-size: 26px;
+        font-weight: 600;
+        font-family: "JetBrains Mono", monospace;
+      }
+
+      /* TABS */
+      .tabs {
+        display: flex;
+        gap: 4px;
+        margin-bottom: 20px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 4px;
+        width: fit-content;
+      }
+      .tab {
+        padding: 7px 18px;
+        border-radius: 7px;
+        cursor: pointer;
+        font-size: 13px;
+        color: var(--text2);
+        transition: all 0.2s;
+        font-family: "DM Sans", sans-serif;
+        border: none;
+        background: none;
+      }
+      .tab.active {
+        background: var(--accent);
+        color: #fff;
+      }
+      .tab:hover:not(.active) {
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text);
+      }
+
+      /* PANEL */
+      .panel {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 20px;
+      }
+      .panel-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+      .panel-title {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text2);
+      }
+      .btn {
+        padding: 8px 16px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        font-size: 13px;
+        font-family: "DM Sans", sans-serif;
+        transition: all 0.2s;
+      }
+      .btn-primary {
+        background: var(--accent);
+        color: #fff;
+      }
+      .btn-primary:hover {
+        background: #1976d2;
+      }
+      .btn-sm {
+        padding: 5px 12px;
+        font-size: 12px;
+        border-radius: 6px;
+      }
+      .btn-danger {
+        background: rgba(255, 71, 87, 0.15);
+        color: var(--danger);
+        border: 1px solid rgba(255, 71, 87, 0.3);
+      }
+      .btn-danger:hover {
+        background: rgba(255, 71, 87, 0.25);
+      }
+      .btn-ok {
+        background: rgba(0, 201, 167, 0.15);
+        color: var(--ok);
+        border: 1px solid rgba(0, 201, 167, 0.3);
+      }
+      .btn-ok:hover {
+        background: rgba(0, 201, 167, 0.25);
+      }
+
+      /* TABLE */
+      .data-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .data-table th {
+        font-size: 11px;
+        color: var(--text3);
+        padding: 8px 12px;
+        border-bottom: 1px solid var(--border);
+        text-align: left;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 500;
+      }
+      .data-table td {
+        padding: 11px 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        font-size: 13px;
+        vertical-align: middle;
+      }
+      .data-table tr:last-child td {
+        border-bottom: none;
+      }
+      .data-table tr:hover td {
+        background: rgba(255, 255, 255, 0.02);
+      }
+      .badge {
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 500;
+      }
+      .b-admin {
+        background: rgba(30, 136, 229, 0.15);
+        color: var(--accent);
+      }
+      .b-user {
+        background: rgba(0, 201, 167, 0.15);
+        color: var(--ok);
+      }
+      .b-locked {
+        background: rgba(255, 71, 87, 0.15);
+        color: var(--danger);
+      }
+      .avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 7px;
+        background: rgba(30, 136, 229, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--accent);
+      }
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      /* LOG */
+      .log-item {
+        padding: 10px 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        font-size: 13px;
+      }
+      .log-item:last-child {
+        border-bottom: none;
+      }
+      .log-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-top: 4px;
+        flex-shrink: 0;
+      }
+      .log-action {
+        font-weight: 500;
+        margin-bottom: 2px;
+      }
+      .log-meta {
+        font-size: 11px;
+        color: var(--text3);
+      }
+      .log-user {
+        color: var(--accent);
+        font-weight: 500;
+      }
+
+      /* FILTER */
+      .filter-bar {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 14px;
+      }
+      .filter-bar input,
+      .filter-bar select {
+        background: var(--bg3);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 7px 12px;
+        color: var(--text);
+        font-size: 12px;
+        font-family: "DM Sans", sans-serif;
+        outline: none;
+      }
+      .filter-bar input:focus,
+      .filter-bar select:focus {
+        border-color: var(--accent);
+      }
+
+      /* ── DASHBOARD VIEW ─────────────────────────────────── */
+      .live-badge {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: var(--ok);
+        background: rgba(0, 201, 167, 0.1);
+        border: 1px solid rgba(0, 201, 167, 0.2);
+        padding: 5px 12px;
+        border-radius: 20px;
+      }
+      .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--ok);
+        animation: pulse 1.5s infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.3;
+        }
+      }
+      .date-btns {
+        display: flex;
+        gap: 4px;
+      }
+      .date-btn {
+        background: var(--card);
+        border: 1px solid var(--border);
+        color: var(--text2);
+        padding: 6px 14px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 12px;
+        font-family: "DM Sans", sans-serif;
+        transition: all 0.2s;
+      }
+      .date-btn.active,
+      .date-btn:hover {
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent);
+      }
+      .alert-bar {
+        background: rgba(255, 71, 87, 0.08);
+        border: 1px solid rgba(255, 71, 87, 0.25);
+        border-radius: 10px;
+        padding: 12px 16px;
+        margin-bottom: 20px;
+        display: none;
+        align-items: center;
+        gap: 12px;
+        animation: alertPulse 2.5s infinite;
+      }
+      @keyframes alertPulse {
+        0%,
+        100% {
+          border-color: rgba(255, 71, 87, 0.25);
+        }
+        50% {
+          border-color: rgba(255, 71, 87, 0.5);
+        }
+      }
+      .alert-text {
+        font-size: 13px;
+        color: #ff8a95;
+      }
+      .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+      .metric {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px;
+        position: relative;
+        overflow: hidden;
+      }
+      .metric::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        border-radius: 12px 12px 0 0;
+      }
+      .m-blue::before {
+        background: var(--accent);
+      }
+      .m-green::before {
+        background: var(--ok);
+      }
+      .m-orange::before {
+        background: var(--orange);
+      }
+      .m-yellow::before {
+        background: var(--warn);
+      }
+      .m-red::before {
+        background: var(--danger);
+      }
+      .m-label {
+        font-size: 11px;
+        color: var(--text2);
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        margin-bottom: 8px;
+      }
+      .m-value {
+        font-size: 22px;
+        font-weight: 600;
+        font-family: "JetBrains Mono", monospace;
+        letter-spacing: -0.5px;
+      }
+      .m-sub {
+        font-size: 12px;
+        margin-top: 5px;
+        color: var(--text3);
+      }
+      .up {
+        color: var(--ok);
+      }
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 320px;
+        gap: 16px;
+        margin-bottom: 16px;
+      }
+      .grid-2b {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      .chart-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 18px;
+      }
+      .card-title {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text2);
+        margin-bottom: 14px;
+        display: flex;
+        justify-content: space-between;
+      }
+      .ch-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .ch-table th {
+        font-size: 11px;
+        color: var(--text3);
+        padding: 6px 8px;
+        border-bottom: 1px solid var(--border);
+        text-align: left;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .ch-table td {
+        padding: 10px 8px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        font-size: 13px;
+      }
+      .ch-table tr:last-child td {
+        border-bottom: none;
+      }
+      .ch-name {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .ch-icon {
+        width: 24px;
+        height: 24px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 700;
+        color: #fff;
+      }
+      .b-ok {
+        background: rgba(0, 201, 167, 0.15);
+        color: var(--ok);
+      }
+      .b-warn {
+        background: rgba(255, 184, 0, 0.15);
+        color: var(--warn);
+      }
+      .b-danger {
+        background: rgba(255, 71, 87, 0.15);
+        color: var(--danger);
+      }
+      .prog {
+        height: 4px;
+        background: rgba(255, 255, 255, 0.07);
+        border-radius: 2px;
+        margin-top: 4px;
+      }
+      .prog-fill {
+        height: 100%;
+        border-radius: 2px;
+      }
+      .budget-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .budget-item {
+        padding: 10px 12px;
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: 8px;
+        border-left: 3px solid;
+      }
+      .bi-ok {
+        border-color: var(--ok);
+      }
+      .bi-warn {
+        border-color: var(--warn);
+      }
+      .bi-danger {
+        border-color: var(--danger);
+      }
+      .bi-top {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        margin-bottom: 6px;
+      }
+      .bi-name {
+        font-weight: 500;
+      }
+      .bi-prog {
+        height: 5px;
+        background: rgba(255, 255, 255, 0.07);
+        border-radius: 3px;
+      }
+      .bi-fill {
+        height: 100%;
+        border-radius: 3px;
+      }
+      .roi-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .roi-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 12px;
+      }
+      .roi-lbl {
+        width: 90px;
+        color: var(--text2);
+        flex-shrink: 0;
+      }
+      .roi-wrap {
+        flex: 1;
+        height: 22px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      .roi-fill {
+        height: 100%;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        padding: 0 8px;
+        font-size: 11px;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.9);
+      }
+      .roi-val {
+        width: 50px;
+        text-align: right;
+        font-family: "JetBrains Mono", monospace;
+        color: var(--text);
+      }
+      .spinner {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        border-top-color: var(--accent);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .loading-overlay {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 200px;
+        color: var(--text3);
+        gap: 12px;
+      }
+
+      /* MODAL */
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 999;
+        display: none;
+      }
+      .modal {
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 28px;
+        width: 400px;
+      }
+      .modal-title {
+        font-size: 17px;
+        font-weight: 600;
+        margin-bottom: 20px;
+      }
+      .form-group {
+        margin-bottom: 14px;
+      }
+      .form-group label {
+        display: block;
+        font-size: 12px;
+        color: var(--text2);
+        margin-bottom: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        background: var(--bg3);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 10px 14px;
+        color: var(--text);
+        font-size: 13px;
+        font-family: "DM Sans", sans-serif;
+        outline: none;
+      }
+      .form-group input:focus,
+      .form-group select:focus {
+        border-color: var(--accent);
+      }
+      .form-group select option {
+        background: var(--bg2);
+      }
+      .modal-actions {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+        margin-top: 20px;
+      }
+      .err-msg {
+        font-size: 12px;
+        color: var(--danger);
+        margin-top: 8px;
+        display: none;
+      }
+
+      /* User selector for dashboard preview */
+      .user-selector {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 12px 16px;
+      }
+      .user-selector label {
+        font-size: 12px;
+        color: var(--text2);
+        white-space: nowrap;
+      }
+      .user-selector select {
+        background: var(--bg3);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 6px 10px;
+        color: var(--text);
+        font-size: 13px;
+        font-family: "DM Sans", sans-serif;
+        outline: none;
+      }
+      .user-selector select:focus {
+        border-color: var(--accent);
+      }
+      .preview-badge {
+        font-size: 11px;
+        color: var(--accent);
+        background: rgba(30, 136, 229, 0.1);
+        border: 1px solid rgba(30, 136, 229, 0.2);
+        padding: 3px 10px;
+        border-radius: 20px;
+        margin-left: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="sidebar">
+      <div class="logo">Ads<span>Analytics</span></div>
+      <button class="nav-item active" id="navUsers" onclick="showView('users')">
+        <svg
+          width="18"
+          height="18"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"
+            stroke-width="2"
+          />
+          <circle cx="9" cy="7" r="4" stroke-width="2" />
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87" stroke-width="2" />
+          <path d="M16 3.13a4 4 0 0 1 0 7.75" stroke-width="2" />
+        </svg>
+        Quản lý User
+      </button>
+      <button
+        class="nav-item"
+        id="navDashboard"
+        onclick="showView('dashboard')"
+      >
+        <svg
+          width="18"
+          height="18"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <rect x="3" y="3" width="7" height="7" rx="1" stroke-width="2" />
+          <rect x="14" y="3" width="7" height="7" rx="1" stroke-width="2" />
+          <rect x="3" y="14" width="7" height="7" rx="1" stroke-width="2" />
+          <rect x="14" y="14" width="7" height="7" rx="1" stroke-width="2" />
+        </svg>
+        Dashboard
+      </button>
+      <div class="sidebar-bottom">
+        <div class="admin-badge">
+          <div class="ab-dot"></div>
+          <div>
+            <div class="ab-text">{{ username }}</div>
+            <div class="ab-sub">Administrator</div>
+          </div>
+        </div>
+        <button class="logout-btn" onclick="logout()">Đăng xuất</button>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="topbar">
+        <div>
+          <div class="page-title" id="pageTitle">Admin Panel</div>
+          <div
+            style="font-size: 12px; color: var(--text3); margin-top: 3px"
+            id="pageSub"
+          >
+            Quản trị hệ thống AdsAnalytics Pro
+          </div>
+        </div>
+        <div style="font-size: 12px; color: var(--text3)" id="clock"></div>
+      </div>
+
+      <!-- ══ VIEW: USERS ══════════════════════════════════════════════ -->
+      <div id="view-users" class="view active">
+        <div class="stats-grid" id="statsGrid">
+          <div class="stat">
+            <div class="stat-label">Tổng User</div>
+            <div class="stat-value" style="color: var(--accent)">—</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Đang hoạt động</div>
+            <div class="stat-value" style="color: var(--ok)">—</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Đăng nhập hôm nay</div>
+            <div class="stat-value" style="color: var(--warn)">—</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Tổng chi phí ads</div>
+            <div class="stat-value" style="color: #ff6b35">—</div>
+          </div>
+        </div>
+
+        <div class="tabs">
+          <button class="tab active" onclick="switchTab('users', this)">
+            Danh sách User
+          </button>
+          <button class="tab" onclick="switchTab('logs', this)">
+            Lịch sử hoạt động
+          </button>
+        </div>
+
+        <!-- USERS TAB -->
+        <div id="tab-users">
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title">Tài khoản người dùng</div>
+              <button
+                class="btn btn-primary btn-sm"
+                onclick="openCreateModal()"
+              >
+                + Tạo tài khoản
+              </button>
+            </div>
+            <div class="filter-bar">
+              <input
+                type="text"
+                id="searchInput"
+                placeholder="Tìm username, email..."
+                oninput="filterUsers()"
+              />
+              <select id="roleFilter" onchange="filterUsers()">
+                <option value="">Tất cả role</option>
+                <option value="admin">Admin</option>
+                <option value="user">User</option>
+              </select>
+              <select id="statusFilter" onchange="filterUsers()">
+                <option value="">Tất cả trạng thái</option>
+                <option value="1">Đang hoạt động</option>
+                <option value="0">Đã khóa</option>
+              </select>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Người dùng</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Trạng thái</th>
+                  <th>Đăng nhập cuối</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody id="usersBody">
+                <tr>
+                  <td
+                    colspan="6"
+                    style="
+                      text-align: center;
+                      color: var(--text3);
+                      padding: 30px;
+                    "
+                  >
+                    Đang tải...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- LOGS TAB -->
+        <div id="tab-logs" style="display: none">
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title">Lịch sử hoạt động hệ thống</div>
+              <button
+                class="btn btn-sm"
+                style="
+                  background: var(--card);
+                  border: 1px solid var(--border);
+                  color: var(--text2);
+                "
+                onclick="loadLogs()"
+              >
+                Làm mới
+              </button>
+            </div>
+            <div class="filter-bar">
+              <select id="logUserFilter" onchange="loadLogs()">
+                <option value="">Tất cả user</option>
+              </select>
+            </div>
+            <div
+              id="logsList"
+              style="max-height: 500px; overflow-y: auto"
+            ></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ VIEW: DASHBOARD PREVIEW ════════════════════════════════ -->
+      <div id="view-dashboard" class="view">
+        <!-- User selector -->
+        <div class="user-selector">
+          <label>Xem dashboard của:</label>
+          <select id="previewUserSelect" onchange="loadDashboardPreview()">
+            <option value="">-- Chọn user --</option>
+          </select>
+          <span class="preview-badge">👁 Chế độ xem thử</span>
+        </div>
+
+        <div class="alert-bar" id="dashAlertBar">
+          <span style="font-size: 16px">⚠</span>
+          <div class="alert-text" id="dashAlertText"></div>
+        </div>
+
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+          "
+        >
+          <div
+            style="font-size: 14px; font-weight: 500; color: var(--text2)"
+            id="dashUserLabel"
+          >
+            Chọn user để xem dashboard
+          </div>
+          <div style="display: flex; gap: 8px">
+            <div class="date-btns" id="dashDateBtns">
+              <button class="date-btn active" onclick="setDashDays(7, this)">
+                7 ngày
+              </button>
+              <button class="date-btn" onclick="setDashDays(30, this)">
+                30 ngày
+              </button>
+              <button class="date-btn" onclick="setDashDays(90, this)">
+                90 ngày
+              </button>
+            </div>
+            <div class="live-badge">
+              <div class="dot"></div>
+              LIVE
+            </div>
+          </div>
+        </div>
+
+        <div class="metrics-grid" id="dashMetrics">
+          <div class="metric m-blue">
+            <div class="m-label">Tổng chi phí</div>
+            <div style="color: var(--text3); font-size: 13px; margin-top: 8px">
+              Chọn user để xem
+            </div>
+          </div>
+          <div class="metric m-green"></div>
+          <div class="metric m-orange"></div>
+          <div class="metric m-yellow"></div>
+          <div class="metric m-red"></div>
+        </div>
+
+        <div class="grid-2">
+          <div class="chart-card">
+            <div class="card-title">
+              Chi phí theo ngày
+              <span style="font-size: 11px; color: var(--text3)"
+                >đơn vị: triệu đồng</span
+              >
+            </div>
+            <div style="position: relative; height: 220px">
+              <canvas id="dashSpendChart"></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="card-title">Hiệu suất theo kênh</div>
+            <table class="ch-table" id="dashChTable">
+              <tbody>
+                <tr>
+                  <td colspan="5">
+                    <div
+                      class="loading-overlay"
+                      style="height: 140px; color: var(--text3)"
+                    >
+                      Chờ chọn user
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="grid-2b">
+          <div class="chart-card">
+            <div class="card-title">ROI theo kênh</div>
+            <div class="roi-list" id="dashRoiList">
+              <div
+                style="
+                  color: var(--text3);
+                  font-size: 13px;
+                  text-align: center;
+                  padding: 30px;
+                "
+              >
+                Chờ chọn user
+              </div>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="card-title">Ngân sách tháng</div>
+            <div class="budget-list" id="dashBudgetList">
+              <div
+                style="
+                  color: var(--text3);
+                  font-size: 13px;
+                  text-align: center;
+                  padding: 30px;
+                "
+              >
+                Chờ chọn user
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CREATE USER MODAL -->
+    <div class="modal-overlay" id="createModal" onclick="closeModal(event)">
+      <div class="modal">
+        <div class="modal-title">Tạo tài khoản mới</div>
+        <div class="form-group">
+          <label>Username</label
+          ><input type="text" id="newUsername" placeholder="vd: nguyen_van_a" />
+        </div>
+        <div class="form-group">
+          <label>Email</label
+          ><input type="email" id="newEmail" placeholder="email@company.com" />
+        </div>
+        <div class="form-group">
+          <label>Mật khẩu</label
+          ><input
+            type="password"
+            id="newPassword"
+            placeholder="Tối thiểu 6 ký tự"
+          />
+        </div>
+        <div class="form-group">
+          <label>Role</label>
+          <select id="newRole">
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <div class="err-msg" id="createErr"></div>
+        <div class="modal-actions">
+          <button
+            class="btn btn-sm"
+            style="
+              background: var(--card);
+              border: 1px solid var(--border);
+              color: var(--text2);
+            "
+            onclick="
+              document.getElementById('createModal').style.display = 'none'
+            "
+          >
+            Hủy
+          </button>
+          <button class="btn btn-primary btn-sm" onclick="createUser()">
+            Tạo tài khoản
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let allUsers = [];
+      let dashChart = null;
+      let dashDays = 7;
+
+      // Clock
+      setInterval(() => {
+        document.getElementById("clock").textContent =
+          new Date().toLocaleTimeString("vi-VN");
+      }, 1000);
+
+      // ── VIEW SWITCHER ────────────────────────────────────────────────
+      function showView(name) {
+        document
+          .querySelectorAll(".view")
+          .forEach((v) => v.classList.remove("active"));
+        document
+          .querySelectorAll(".nav-item")
+          .forEach((n) => n.classList.remove("active"));
+        document.getElementById("view-" + name).classList.add("active");
+        document
+          .getElementById("nav" + name.charAt(0).toUpperCase() + name.slice(1))
+          .classList.add("active");
+
+        if (name === "users") {
+          document.getElementById("pageTitle").textContent = "Admin Panel";
+          document.getElementById("pageSub").textContent =
+            "Quản trị hệ thống AdsAnalytics Pro";
+        } else if (name === "dashboard") {
+          document.getElementById("pageTitle").textContent =
+            "Dashboard Preview";
+          document.getElementById("pageSub").textContent =
+            "Xem dashboard như một user bất kỳ";
+          populatePreviewUserSelect();
+        }
+      }
+
+      // ── USERS TAB ────────────────────────────────────────────────────
+      function switchTab(name, btn) {
+        document
+          .querySelectorAll(".tab")
+          .forEach((t) => t.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById("tab-users").style.display =
+          name === "users" ? "block" : "none";
+        document.getElementById("tab-logs").style.display =
+          name === "logs" ? "block" : "none";
+        if (name === "logs") loadLogs();
+      }
+
+      async function loadStats() {
+        const res = await fetch("/api/admin/stats");
+        const d = await res.json();
+        document.getElementById("statsGrid").innerHTML = `
+          <div class="stat"><div class="stat-label">Tổng User</div><div class="stat-value" style="color:var(--accent)">${d.total_users}</div></div>
+          <div class="stat"><div class="stat-label">Đang hoạt động</div><div class="stat-value" style="color:var(--ok)">${d.active_users}</div></div>
+          <div class="stat"><div class="stat-label">Đăng nhập hôm nay</div><div class="stat-value" style="color:var(--warn)">${d.today_logins}</div></div>
+          <div class="stat"><div class="stat-label">Tổng chi phí ads</div><div class="stat-value" style="color:#FF6B35">${(d.total_spend / 1000000).toFixed(0)}M</div></div>`;
+      }
+
+      async function loadUsers() {
+        const res = await fetch("/api/admin/users");
+        allUsers = await res.json();
+        renderUsers(allUsers);
+        const sel = document.getElementById("logUserFilter");
+        // clear old options except first
+        while (sel.options.length > 1) sel.remove(1);
+        allUsers
+          .filter((u) => u.role === "user")
+          .forEach((u) => {
+            const o = document.createElement("option");
+            o.value = u.id;
+            o.textContent = u.username;
+            sel.appendChild(o);
+          });
+      }
+
+      function filterUsers() {
+        const q = document.getElementById("searchInput").value.toLowerCase();
+        const role = document.getElementById("roleFilter").value;
+        const status = document.getElementById("statusFilter").value;
+        renderUsers(
+          allUsers.filter((u) => {
+            return (
+              (!q ||
+                u.username.toLowerCase().includes(q) ||
+                u.email.toLowerCase().includes(q)) &&
+              (!role || u.role === role) &&
+              (status === "" || String(u.is_active) === status)
+            );
+          }),
+        );
+      }
+
+      function renderUsers(users) {
+        const tbody = document.getElementById("usersBody");
+        if (!users.length) {
+          tbody.innerHTML =
+            '<tr><td colspan="6" style="text-align:center;color:var(--text3);padding:30px">Không tìm thấy</td></tr>';
+          return;
+        }
+        tbody.innerHTML = users
+          .map((u) => {
+            const isAdmin = u.role === "admin";
+            const lastLogin = u.last_login
+              ? new Date(u.last_login).toLocaleString("vi-VN")
+              : "Chưa đăng nhập";
+            const statusBadge = u.is_active
+              ? '<span class="badge b-user">Hoạt động</span>'
+              : '<span class="badge b-locked">Đã khóa</span>';
+            const roleBadge = isAdmin
+              ? '<span class="badge b-admin">Admin</span>'
+              : '<span class="badge b-user">User</span>';
+            const toggleBtn = isAdmin
+              ? ""
+              : u.is_active
+                ? `<button class="btn btn-danger btn-sm" onclick="toggleUser(${u.id})">Khóa</button>`
+                : `<button class="btn btn-ok btn-sm" onclick="toggleUser(${u.id})">Mở khóa</button>`;
+            const roleBtn = isAdmin
+              ? ""
+              : `<button class="btn btn-sm" style="background:var(--card);border:1px solid var(--border);color:var(--text2);font-size:11px" onclick="changeRole(${u.id},'${u.role}')">Đổi role</button>`;
+            const logBtn = !isAdmin
+              ? `<button class="btn btn-sm" style="background:var(--card);border:1px solid var(--border);color:var(--text2);font-size:11px" onclick="viewLogs(${u.id},'${u.username}')">Lịch sử</button>`
+              : "";
+            const dashBtn = !isAdmin
+              ? `<button class="btn btn-sm" style="background:rgba(30,136,229,0.1);border:1px solid rgba(30,136,229,0.2);color:var(--accent);font-size:11px" onclick="previewUserDash(${u.id},'${u.username}')">Xem Dashboard</button>`
+              : "";
+            return `<tr>
+            <td><div class="user-info"><div class="avatar">${u.username.charAt(0).toUpperCase()}</div><div><div style="font-weight:500">${u.username}</div><div style="font-size:11px;color:var(--text3)">#${u.id}</div></div></div></td>
+            <td style="color:var(--text2)">${u.email}</td>
+            <td>${roleBadge}</td>
+            <td>${statusBadge}</td>
+            <td style="color:var(--text3);font-size:12px">${lastLogin}</td>
+            <td><div style="display:flex;gap:6px;flex-wrap:wrap">${toggleBtn}${roleBtn}${logBtn}${dashBtn}</div></td>
+          </tr>`;
+          })
+          .join("");
+      }
+
+      async function toggleUser(uid) {
+        await fetch(`/api/admin/users/${uid}/toggle`, { method: "POST" });
+        await loadUsers();
+        await loadStats();
+      }
+
+      async function changeRole(uid, currentRole) {
+        const newRole = currentRole === "user" ? "admin" : "user";
+        if (!confirm(`Đổi role sang "${newRole}"?`)) return;
+        await fetch(`/api/admin/users/${uid}/role`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ role: newRole }),
+        });
+        await loadUsers();
+      }
+
+      function viewLogs(uid, uname) {
+        // Switch to logs tab and filter
+        document
+          .querySelectorAll(".tab")
+          .forEach((t) => t.classList.remove("active"));
+        document.querySelectorAll(".tab")[1].classList.add("active");
+        document.getElementById("tab-users").style.display = "none";
+        document.getElementById("tab-logs").style.display = "block";
+        document.getElementById("logUserFilter").value = uid;
+        loadLogs();
+      }
+
+      // Preview user dashboard directly from user row
+      function previewUserDash(uid, uname) {
+        showView("dashboard");
+        document.getElementById("previewUserSelect").value = uid;
+        loadDashboardPreview();
+      }
+
+      async function loadLogs() {
+        const uid = document.getElementById("logUserFilter").value;
+        const url = uid ? `/api/admin/logs?user_id=${uid}` : "/api/admin/logs";
+        const res = await fetch(url);
+        const logs = await res.json();
+        const colors = {
+          LOGIN: "var(--ok)",
+          LOGOUT: "var(--text3)",
+          VIEW_DASHBOARD: "var(--accent)",
+          TOGGLE_USER: "var(--warn)",
+          CREATE_USER: "var(--ok)",
+          CHANGE_ROLE: "var(--warn)",
+        };
+        document.getElementById("logsList").innerHTML = logs.length
+          ? logs
+              .map(
+                (l) => `
+            <div class="log-item">
+              <div class="log-dot" style="background:${colors[l.action] || "var(--text3)"}"></div>
+              <div>
+                <div class="log-action"><span class="log-user">${l.username}</span> — ${l.action}</div>
+                <div class="log-meta">${l.detail} · ${new Date(l.created_at).toLocaleString("vi-VN")} · IP: ${l.ip}</div>
+              </div>
+            </div>`,
+              )
+              .join("")
+          : '<div style="text-align:center;color:var(--text3);padding:40px">Chưa có log</div>';
+      }
+
+      // ── DASHBOARD PREVIEW ────────────────────────────────────────────
+      function populatePreviewUserSelect() {
+        const sel = document.getElementById("previewUserSelect");
+        while (sel.options.length > 1) sel.remove(1);
+        allUsers
+          .filter((u) => u.role === "user")
+          .forEach((u) => {
+            const o = document.createElement("option");
+            o.value = u.id;
+            o.textContent = u.username;
+            sel.appendChild(o);
+          });
+      }
+
+      function setDashDays(d, btn) {
+        dashDays = d;
+        document
+          .querySelectorAll("#dashDateBtns .date-btn")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        loadDashboardPreview();
+      }
+
+      async function loadDashboardPreview() {
+        const uid = document.getElementById("previewUserSelect").value;
+        if (!uid) return;
+        const user = allUsers.find((u) => u.id == uid);
+        document.getElementById("dashUserLabel").textContent =
+          `Dashboard của: ${user?.username || ""}`;
+
+        // Show loading
+        document.getElementById("dashMetrics").innerHTML = Array(5)
+          .fill(0)
+          .map(
+            (_, i) =>
+              `<div class="metric m-${"blue green orange yellow red".split(" ")[i]}"><div class="loading-overlay"><div class="spinner"></div></div></div>`,
+          )
+          .join("");
+
+        const res = await fetch(
+          `/api/admin/preview-dashboard?user_id=${uid}&days=${dashDays}`,
+        );
+        const d = await res.json();
+
+        renderDashMetrics(d);
+        renderDashChart(d);
+        renderDashChannels(d);
+        renderDashROI(d);
+        renderDashBudgets(d);
+        checkDashAlerts(d);
+      }
+
+      function fmt(n) {
+        return new Intl.NumberFormat("vi-VN").format(Math.round(n));
+      }
+      function fmtM(n) {
+        return (n / 1000000).toFixed(1) + "M";
+      }
+
+      function renderDashMetrics(d) {
+        document.getElementById("dashMetrics").innerHTML = `
+          <div class="metric m-blue"><div class="m-label">Tổng chi phí</div><div class="m-value" style="color:var(--accent)">${fmtM(d.total_spend)}</div><div class="m-sub up">↑ 12.3%</div></div>
+          <div class="metric m-green"><div class="m-label">Doanh thu (ước)</div><div class="m-value" style="color:var(--ok)">${fmtM(d.total_revenue)}</div><div class="m-sub up">↑ 18.7%</div></div>
+          <div class="metric m-orange"><div class="m-label">ROAS trung bình</div><div class="m-value" style="color:#FF6B35">${d.roas}x</div><div class="m-sub" style="color:var(--text3)">Mục tiêu: 4.0x</div></div>
+          <div class="metric m-yellow"><div class="m-label">ROI tổng</div><div class="m-value" style="color:var(--warn)">${d.roi}%</div><div class="m-sub up">↑ 6.4%</div></div>
+          <div class="metric m-red"><div class="m-label">CPA trung bình</div><div class="m-value" style="color:var(--danger)">${fmt(d.cpa)}đ</div><div class="m-sub" style="color:var(--text3)">Mục tiêu: 120,000đ</div></div>`;
+      }
+
+      function renderDashChart(d) {
+        const ctx = document.getElementById("dashSpendChart").getContext("2d");
+        if (dashChart) dashChart.destroy();
+        dashChart = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: d.labels,
+            datasets: [
+              {
+                label: "Facebook",
+                data: d.spend_series.facebook,
+                backgroundColor: "rgba(24,119,242,0.75)",
+                borderRadius: 4,
+                stack: "s",
+              },
+              {
+                label: "Google",
+                data: d.spend_series.google,
+                backgroundColor: "rgba(234,67,53,0.75)",
+                borderRadius: 4,
+                stack: "s",
+              },
+              {
+                label: "TikTok",
+                data: d.spend_series.tiktok,
+                backgroundColor: "rgba(160,160,160,0.6)",
+                borderRadius: 4,
+                stack: "s",
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: { label: (c) => `${c.dataset.label}: ${c.raw}M` },
+              },
+            },
+            scales: {
+              x: {
+                grid: { color: "rgba(255,255,255,0.04)" },
+                ticks: { color: "#5A6A82", font: { size: 11 } },
+                stacked: true,
+              },
+              y: {
+                grid: { color: "rgba(255,255,255,0.04)" },
+                ticks: {
+                  color: "#5A6A82",
+                  font: { size: 11 },
+                  callback: (v) => v + "M",
+                },
+                stacked: true,
+              },
+            },
+          },
+        });
+      }
+
+      function renderDashChannels(d) {
+        const ch = d.channel_stats;
+        const budgets = d.budgets || {};
+        const rows = {
+          facebook: { icon: "f", bg: "#1877F2", name: "Facebook" },
+          google: { icon: "G", bg: "#EA4335", name: "Google" },
+          tiktok: { icon: "T", bg: "#555", name: "TikTok" },
+        };
+        let html =
+          "<thead><tr><th>Kênh</th><th>Chi phí</th><th>ROAS</th><th>CTR</th><th>Trạng thái</th></tr></thead><tbody>";
+        for (const [k, r] of Object.entries(rows)) {
+          const s = ch[k];
+          const budget = budgets[k] || 0;
+          const pct = budget ? Math.round((s.spend / budget) * 100) : 0;
+          const color =
+            pct >= 85
+              ? "var(--danger)"
+              : pct >= 70
+                ? "var(--warn)"
+                : "var(--ok)";
+          const badge =
+            pct >= 85
+              ? '<span class="badge b-danger">Vượt mức</span>'
+              : pct >= 70
+                ? '<span class="badge b-warn">Chú ý</span>'
+                : '<span class="badge b-ok">Tốt</span>';
+          const rcolor =
+            s.roas >= 4
+              ? "var(--ok)"
+              : s.roas >= 3
+                ? "var(--warn)"
+                : "var(--danger)";
+          html += `<tr>
+            <td><div class="ch-name"><div class="ch-icon" style="background:${r.bg}">${r.icon}</div>${r.name}</div>
+              ${budget ? `<div class="prog"><div class="prog-fill" style="width:${Math.min(pct, 100)}%;background:${color}"></div></div>` : ""}
+            </td>
+            <td><span style="font-family:'JetBrains Mono',monospace">${fmtM(s.spend)}</span>${budget ? `<br><span style="font-size:11px;color:${color}">${pct}% NS</span>` : ""}</td>
+            <td style="font-family:'JetBrains Mono',monospace;color:${rcolor}">${s.roas}x</td>
+            <td style="color:var(--text2)">${s.ctr}%</td>
+            <td>${badge}</td>
+          </tr>`;
+        }
+        html += "</tbody>";
+        document.getElementById("dashChTable").innerHTML = html;
+      }
+
+      function renderDashROI(d) {
+        const ch = d.channel_stats;
+        const items = [
+          { lbl: "FB - Brand", roi: 388, color: "#1877F2" },
+          {
+            lbl: "GG - Search",
+            roi: Math.round(ch.google.roas * 80),
+            color: "#EA4335",
+          },
+          {
+            lbl: "TikTok",
+            roi: Math.round(ch.tiktok.roas * 72),
+            color: "#888",
+          },
+          { lbl: "FB - Retarget", roi: 231, color: "#42a5f5" },
+          { lbl: "GG - Display", roi: 162, color: "#ef9a9a" },
+        ].sort((a, b) => b.roi - a.roi);
+        const max = items[0].roi;
+        document.getElementById("dashRoiList").innerHTML = items
+          .map(
+            (i) => `
+          <div class="roi-row">
+            <div class="roi-lbl">${i.lbl}</div>
+            <div class="roi-wrap"><div class="roi-fill" style="width:${Math.round((i.roi / max) * 100)}%;background:${i.color}">${i.roi}%</div></div>
+            <div class="roi-val">${i.roi}%</div>
+          </div>`,
+          )
+          .join("");
+      }
+
+      function renderDashBudgets(d) {
+        const budgets = d.budgets || {};
+        const ch = d.channel_stats;
+        const names = {
+          facebook: "Facebook Ads",
+          google: "Google Ads",
+          tiktok: "TikTok Ads",
+        };
+        let html = "";
+        let totalLimit = 0,
+          totalSpend = 0;
+        for (const [k, limit] of Object.entries(budgets)) {
+          const spend = ch[k]?.spend || 0;
+          const pct = Math.round((spend / limit) * 100);
+          totalLimit += limit;
+          totalSpend += spend;
+          const cls = pct >= 85 ? "bi-danger" : pct >= 70 ? "bi-warn" : "bi-ok";
+          const color =
+            pct >= 85
+              ? "var(--danger)"
+              : pct >= 70
+                ? "var(--warn)"
+                : "var(--ok)";
+          html += `<div class="budget-item ${cls}">
+            <div class="bi-top"><span class="bi-name">${names[k] || k}</span><span style="color:${color};font-family:'JetBrains Mono',monospace;font-size:11px">${pct}% · ${fmtM(spend)} / ${fmtM(limit)}</span></div>
+            <div class="bi-prog"><div class="bi-fill" style="width:${Math.min(pct, 100)}%;background:${color}"></div></div>
+          </div>`;
+        }
+        if (totalLimit) {
+          const tp = Math.round((totalSpend / totalLimit) * 100);
+          html += `<div style="margin-top:4px;padding:10px;background:rgba(30,136,229,0.07);border-radius:8px;border:1px solid rgba(30,136,229,0.15)">
+            <div style="font-size:11px;color:var(--text3);margin-bottom:4px">TỔNG NGÂN SÁCH</div>
+            <div style="display:flex;justify-content:space-between;font-size:12px">
+              <span>Đã chi: <strong style="color:var(--accent);font-family:'JetBrains Mono',monospace">${fmtM(totalSpend)}</strong></span>
+              <span>Còn lại: <strong style="color:var(--ok);font-family:'JetBrains Mono',monospace">${fmtM(totalLimit - totalSpend)}</strong></span>
+            </div>
+            <div class="bi-prog" style="margin-top:8px;height:6px"><div class="bi-fill" style="width:${tp}%;background:linear-gradient(90deg,var(--accent),var(--ok))"></div></div>
+          </div>`;
+        }
+        document.getElementById("dashBudgetList").innerHTML =
+          html ||
+          '<div style="color:var(--text3);font-size:13px;text-align:center;padding:20px">Chưa có ngân sách</div>';
+      }
+
+      function checkDashAlerts(d) {
+        const bar = document.getElementById("dashAlertBar");
+        const budgets = d.budgets || {};
+        const ch = d.channel_stats;
+        const alerts = [];
+        const names = {
+          facebook: "Facebook Ads",
+          google: "Google Ads",
+          tiktok: "TikTok Ads",
+        };
+        for (const [k, limit] of Object.entries(budgets)) {
+          const pct = Math.round(((ch[k]?.spend || 0) / limit) * 100);
+          if (pct >= 80)
+            alerts.push(
+              `<strong>${names[k]}</strong> đã dùng <strong>${pct}%</strong> ngân sách tháng`,
+            );
+        }
+        if (alerts.length) {
+          bar.style.display = "flex";
+          document.getElementById("dashAlertText").innerHTML =
+            "⚠ CẢNH BÁO: " + alerts.join(" — ");
+        } else bar.style.display = "none";
+      }
+
+      // ── MODALS ───────────────────────────────────────────────────────
+      function openCreateModal() {
+        document.getElementById("createModal").style.display = "flex";
+        document.getElementById("createErr").style.display = "none";
+      }
+      function closeModal(e) {
+        if (e.target === document.getElementById("createModal"))
+          document.getElementById("createModal").style.display = "none";
+      }
+
+      async function createUser() {
+        const username = document.getElementById("newUsername").value.trim();
+        const email = document.getElementById("newEmail").value.trim();
+        const password = document.getElementById("newPassword").value;
+        const role = document.getElementById("newRole").value;
+        const err = document.getElementById("createErr");
+        if (!username || !email || !password) {
+          err.textContent = "Vui lòng điền đầy đủ";
+          err.style.display = "block";
+          return;
+        }
+        if (password.length < 6) {
+          err.textContent = "Mật khẩu tối thiểu 6 ký tự";
+          err.style.display = "block";
+          return;
+        }
+        const res = await fetch("/api/admin/users", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, email, password, role }),
+        });
+        const d = await res.json();
+        if (!res.ok) {
+          err.textContent = d.error;
+          err.style.display = "block";
+          return;
+        }
+        document.getElementById("createModal").style.display = "none";
+        ["newUsername", "newEmail", "newPassword"].forEach(
+          (id) => (document.getElementById(id).value = ""),
+        );
+        await loadUsers();
+        await loadStats();
+      }
+
+      async function logout() {
+        await fetch("/api/logout", { method: "POST" });
+        window.location.href = "/login";
+      }
+
+      // Init
+      loadStats();
+      loadUsers();
+    </script>
+  </body>
+</html>

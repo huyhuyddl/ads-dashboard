@@ -1,17 +1,42 @@
-# Node
-node_modules/
-build/
-
 # Python
 __pycache__/
-*.pyc
-venv/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
 
-# Env
+# Virtual environment
+venv/
+env/
+.venv/
+.env/
+
+# Environment & secrets
 .env
+*.env
 
 # Database
+instance/
 *.db
+*.sqlite3
 
 # Logs
-npm-debug.log*
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Flask
+flask_session/

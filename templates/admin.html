@@ -299,6 +299,7 @@
         border-radius: 4px;
         font-size: 11px;
         font-weight: 500;
+        white-space: nowrap;
       }
       .b-admin {
         background: rgba(30, 136, 229, 0.15);
@@ -516,12 +517,12 @@
       .up {
         color: var(--ok);
       }
-      .grid-2 {
-        display: grid;
-        grid-template-columns: 1fr 320px;
-        gap: 16px;
-        margin-bottom: 16px;
-      }
+ .grid-2 {
+    display: grid;
+    grid-template-columns: 2fr minmax(380px, 420px);
+    gap: 16px;
+    margin-bottom: 16px;
+}
       .grid-2b {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -544,6 +545,7 @@
       .ch-table {
         width: 100%;
         border-collapse: collapse;
+        
       }
       .ch-table th {
         font-size: 11px;
@@ -1539,7 +1541,7 @@
             <td><span style="font-family:'JetBrains Mono',monospace">${fmtM(s.spend)}</span>${budget ? `<br><span style="font-size:11px;color:${color}">${pct}% NS</span>` : ""}</td>
             <td style="font-family:'JetBrains Mono',monospace;color:${rcolor}">${s.roas}x</td>
             <td style="color:var(--text2)">${s.ctr}%</td>
-            <td>${badge}</td>
+            <td style="white-space:nowrap">${badge}</td>
           </tr>`;
         }
         html += "</tbody>";
@@ -1605,14 +1607,25 @@
           </div>`;
         }
         if (totalLimit) {
-          const tp = Math.round((totalSpend / totalLimit) * 100);
+          const tp        = Math.round((totalSpend / totalLimit) * 100);
+          const remaining = totalLimit - totalSpend;
+          const isOver    = remaining < 0;
+          const totalBarColor = tp >= 100
+            ? "var(--danger)"
+            : tp >= 85
+              ? "var(--warn)"
+              : "linear-gradient(90deg,var(--accent),var(--ok))";
+          const remainColor = isOver ? "var(--danger)" : "var(--ok)";
+          const remainLabel = isOver
+            ? `Vượt: <strong style="color:${remainColor};font-family:'JetBrains Mono',monospace">+${fmtM(Math.abs(remaining))}</strong>`
+            : `Còn lại: <strong style="color:${remainColor};font-family:'JetBrains Mono',monospace">${fmtM(remaining)}</strong>`;
           html += `<div style="margin-top:4px;padding:10px;background:rgba(30,136,229,0.07);border-radius:8px;border:1px solid rgba(30,136,229,0.15)">
-            <div style="font-size:11px;color:var(--text3);margin-bottom:4px">TỔNG NGÂN SÁCH</div>
-            <div style="display:flex;justify-content:space-between;font-size:12px">
-              <span>Đã chi: <strong style="color:var(--accent);font-family:'JetBrains Mono',monospace">${fmtM(totalSpend)}</strong></span>
-              <span>Còn lại: <strong style="color:var(--ok);font-family:'JetBrains Mono',monospace">${fmtM(totalLimit - totalSpend)}</strong></span>
+            <div style="font-size:11px;color:var(--text3);margin-bottom:6px">TỔNG NGÂN SÁCH</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;min-width:0">
+              <span style="white-space:nowrap">Đã chi: <strong style="color:var(--accent);font-family:'JetBrains Mono',monospace">${fmtM(totalSpend)}</strong></span>
+              <span style="white-space:nowrap">${remainLabel}</span>
             </div>
-            <div class="bi-prog" style="margin-top:8px;height:6px"><div class="bi-fill" style="width:${tp}%;background:linear-gradient(90deg,var(--accent),var(--ok))"></div></div>
+            <div class="bi-prog" style="margin-top:8px;height:6px"><div class="bi-fill" style="width:${Math.min(tp,100)}%;background:${totalBarColor}"></div></div>
           </div>`;
         }
         document.getElementById("dashBudgetList").innerHTML =
